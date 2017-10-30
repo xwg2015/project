@@ -1,0 +1,12 @@
+<!--index.wxml-->
+<view class="page page-index">
+  <view class="tips">
+    <view class="about">步行街很黄，但是很温暖！</view>
+    <view class="title">注意：</view>
+    <view class="item">1.小程序服务器配置必须是经过备案的域名才可，数据是通过python于2010-10-12 21:28爬取的</view>
+    <view class="item">2.部分图片做了访问限制，展示不了</view>
+    <view class="item">3.部分帖子详情富文本内容不规范，导致wxParse插件解析报错，页面渲染出错</view>
+    <view class="item">4.未知的问题</view>
+  </view>
+  <button type="default" class="btn" bindtap="linkTo">我不嫌弃，我就要逛步行街~</button>
+</view>

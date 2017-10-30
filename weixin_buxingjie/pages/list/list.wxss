@@ -1,0 +1,29 @@
+/* pages/list/list.wxss */
+.page-list {
+  font-size: 14px;
+  border-top: 1rpx solid #eee;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 120rpx;
+  padding: 0 20rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.list-item:active {
+  background-color: #eee;
+}
+
+.list-item .title {
+  margin-right: 20rpx;
+  color: #b50000;
+}
+ 
+.list-item .comment {
+  text-align: right;
+  width: 200rpx;
+  color: #666;
+} 

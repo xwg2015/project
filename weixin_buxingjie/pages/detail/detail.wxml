@@ -1,0 +1,39 @@
+<!--pages/detail/detail.wxml-->
+<import src="../../wxParse/wxParse.wxml"/>
+<view class="page page-detail">
+  <view class="inner" wx:if="{{detail.content}}">
+    <view class="header">
+      <view class="title">{{detail.title}}</view>
+      <view class="info">
+        <view>{{detail.author}}</view>
+        <view>{{detail.time}}</view>
+      </view>
+    </view>
+    <view class="content">
+      <template is="wxParse" data="{{wxParseData:content.nodes}}"/> 
+    </view>
+    <view class="reply-list">
+      <view class="reply-title">这些回帖亮了</view>
+      <view class="item" wx:for="{{detail.reply}}" wx:key="item">
+        <view class="reply-info">
+          <view class="reply-author">{{item.username}} {{item.time}}</view>
+          <view class="lights">亮了{{item.light_num}}</view>
+        </view>
+        <view class="quote" wx:if='{{item.reply_quote_hd !== "None"}}'>
+          <view class="quote-header">{{item.reply_quote_hd}}</view>
+          <view class="quote-content">
+            <template is="wxParse" data="{{wxParseData:quote_arr[index]}}"/>
+          </view>
+        </view>
+        <view class="reply">
+          <template is="wxParse" data="{{wxParseData:cur_reply_arr[index]}}"/> 
+        </view>
+      </view>
+    </view>
+    <view class="more">还想浏览更多精彩回帖，请前往虎扑官方步行街。</view>
+  </view>
+  <view class="no-result" wx:else>
+    <view>非常抱歉，爬虫罢工，数据抓取失败，</view>
+    <view>请前往虎扑官方步行街。</view>
+  </view>
+</view>

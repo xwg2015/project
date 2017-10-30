@@ -1,0 +1,34 @@
+/**app.wxss**/
+@import "wxParse/wxParse.wxss";
+
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 200rpx 0;
+  box-sizing: border-box;
+}
+
+.page {
+  overflow-x: hidden;
+}
+
+.no-result {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -20px;
+  margin-left: -119px;
+  text-align: center;
+  font-size: 14px;
+  color: #999;
+}
+
+.more {
+  padding: 20rpx 0;
+  text-align: center;
+  font-size: 14px;
+  color: #999;
+}

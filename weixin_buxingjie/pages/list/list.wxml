@@ -1,0 +1,15 @@
+<!--pages/list/list.wxml-->
+<view class="page page-list">
+  <view class="inner">
+    <view class="list">
+      <view class="list-item" wx:for="{{list}}" wx:key="item" data-url="{{item.url}}" bindtap="linkTo">
+        <view class='title'>{{item.title}}</view>
+        <view class='comment'>
+          <view>{{item.lights}}</view>
+          <view>{{item.replys}}</view>
+        </view>
+      </view>
+    </view>
+    <view class='more'>还想浏览更多精彩帖子，请前往虎扑官方步行街。</view>
+  </view>
+</view>

@@ -1,0 +1,74 @@
+/* pages/detail/detail.wxss */
+.page-detail .header {
+  padding: 20rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.page-detail .title {
+  margin-bottom: 16rpx;
+  font-size: 16px;
+  color: #333;
+}
+
+.page-detail .info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #999;
+}
+
+.page-detail .content {
+  padding: 20rpx;
+  font-size: 14px;
+  color: #666;
+}
+
+.page-detail .reply-list {
+  font-size: 14px;
+  background-color: #f3f3f3;
+  color: #666;
+}
+
+.page-detail .reply-title {
+  padding: 12rpx;
+  border: 2rpx solid #e3e4e5;
+  border-left: 6rpx solid #b50000;
+  color: #b50000;
+}
+
+.page-detail .item {
+  padding: 20rpx;
+  border-bottom: 1rpx solid #e3e4e5;
+}
+
+.page-detail .reply-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12rpx;
+}
+
+.page-detail .reply-author {
+  font-size: 14px;
+  color: #999;
+}
+
+.page-detail .lights {
+  font-size: 14px;
+  color: #b50000;
+}
+
+.page-detail .quote {
+  padding: 20rpx 12rpx;
+  margin-bottom: 12rpx;
+  background-color: #eeebeb;
+}
+
+.page-detail .quote-header {
+  margin-bottom: 12rpx;
+  font-size: 14px;
+}
+
+.page-detail .quote-content {
+  color: #999;
+}
+
