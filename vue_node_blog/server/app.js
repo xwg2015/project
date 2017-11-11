@@ -35,6 +35,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api_index', require('./routes/api_index'));
 app.use('/api_admin', require('./routes/api_admin'));
 
+// 跨域
+// 本地开发支持跨域
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+  res.header("X-Powered-By", '3.2.1')
+  res.header("Content-Type", "application/json;charset=utf-8");
+  next();
+})
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
