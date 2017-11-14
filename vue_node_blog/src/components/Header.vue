@@ -9,8 +9,14 @@
         </MenuItem>
         <MenuItem name="2">
           <Icon type="person"></Icon>
-          <Button type="text" size="small" class="btn-login" @click="handleLogin">登录</Button>
-          <Button type="text" size="small" class="btn-register" @click="handleRegister">注册</Button>
+          <template v-if="userInfo.username === ''">
+            <Button type="text" size="small" class="btn-login" @click="handleLogin">登录</Button>
+            <Button type="text" size="small" class="btn-register" @click="handleRegister">注册</Button>
+          </template>
+          <template v-if="userInfo.username !== ''">
+              你好，{{ userInfo.username }}
+              <Button type="text" size="small" class="btn-register" @click="handleLogout">退出</Button>
+          </template>
         </MenuItem>
       </div>
     </Menu>
@@ -18,8 +24,7 @@
       v-model="userModal"
       :title="`${typeZh[userForm.type]}`"
       :ok-text="`${typeZh[userForm.type]}`"
-      width="300"
-      @on-ok="handleSubmit">
+      width="300">
       <Form ref="userForm" :model="userForm" :rules="rules">
         <FormItem prop="username">
           <Input type="text" v-model="userForm.username" placeholder="请输入用户名">
@@ -27,12 +32,12 @@
           </Input>
         </FormItem>
         <FormItem prop="password">
-          <Input type="text" v-model="userForm.password" placeholder="请输入密码">
+          <Input type="password" v-model="userForm.password" placeholder="请输入密码">
             <Icon type="ios-locked" slot="prepend"></Icon>
           </Input>
         </FormItem>
         <FormItem prop="passwordAgain" v-if="userForm.type === 'register'">
-          <Input type="text" v-model="userForm.passwordAgain" placeholder="请确认密码">
+          <Input type="password" v-model="userForm.passwordAgain" placeholder="请确认密码">
             <Icon type="ios-locked" slot="prepend"></Icon>
           </Input>
         </FormItem>
@@ -42,6 +47,9 @@
           </Input>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button type="primary" size="large" long :loading="userLoading" @click="handleSubmit('userForm')">{{ typeZh[userForm.type] }}</Button>
+      </div>
     </Modal>
   </header>
 </template>
@@ -63,11 +71,16 @@
 </style>
 
 <script>
+  import axios from 'axios'
   export default {
     name: 'header',
     data () {
       return {
         userModal: false,
+        userLoading: false,
+        userInfo: {
+          username: ''
+        },
         userForm: {
           type: '',
           username: '',
@@ -81,7 +94,7 @@
         },
         rules: {
           username: [
-            { required: true, message: '用户名都不输，鬼知道你是谁', trigger: 'blur' }
+            { required: true, message: '请输入用户名', trigger: 'blur' }
           ],
           password: [
             { required: true, message: '请输入密码', trigger: 'blur' }
@@ -96,16 +109,61 @@
 
     },
     methods: {
+      // 信息重置
+      dataReset () {
+        this.userForm = {
+          type: '',
+          username: '',
+          password: '',
+          passwordAgain: '',
+          code: ''
+        }
+      },
+      // 退出登录
+      handleLogout () {
+
+      },
+      // 登录弹层
       handleLogin () {
         this.userModal = true
         this.userForm.type = 'login'
       },
+      // 注册弹层
       handleRegister () {
         this.userModal = true
         this.userForm.type = 'register'
       },
-      handleSubmit () {
+      // 注册、登录提交
+      handleSubmit (name) {
+        var _this = this
+        var data = {
+          username: this.userForm.username,
+          password: this.userForm.password
+        }
 
+        if (this.userForm.type === 'register') {
+          data.code = this.userForm.code
+        }
+
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            let _this = this
+            axios.post(`${this.$golbal.host}/${_this.userForm.type}`, data).then(function (response) {
+              if (response.data.code === 0) {
+                _this.userInfo.username = response.data.userInfo.username
+                _this.$Message.success(`${_this.typeZh[_this.userForm.type]}成功！`)
+                _this.userModal = false
+                _this.dataReset()
+              } else {
+                _this.$Message.error(response.data.msg)
+              }
+            }).catch(function () {
+              _this.$Message.error('接口异常！')
+            })
+          } else {
+            _this.$Message.error('信息填写有误！')
+          }
+        })
       }
     }
   }

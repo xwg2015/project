@@ -28,7 +28,7 @@ var articleSchema = new Schema({
     },
     time: {
       type: Date,
-      default: new Date()
+      default: Date.now
     }
 });
 

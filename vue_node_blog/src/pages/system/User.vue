@@ -121,7 +121,7 @@ export default {
                     }
                   }
                 },
-                this.adminText(params.index)
+                '22'
               ),
               h(
                 'Button',
@@ -154,7 +154,7 @@ export default {
                     }
                   }
                 },
-                this.hideText(params.index)
+                '33'
               )
             ])
           }
