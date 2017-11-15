@@ -75,6 +75,11 @@ export default {
       userData: [],
       articleColumns: [
         {
+          type: 'index',
+          width: 60,
+          align: 'center'
+        },
+        {
           title: '用户名',
           key: 'username'
         },
@@ -101,7 +106,7 @@ export default {
         {
           title: '操作',
           key: 'action',
-          width: 240,
+          width: 160,
           align: 'center',
           render: (h, params) => {
             return h('div', [
@@ -110,7 +115,8 @@ export default {
                 {
                   props: {
                     type: 'primary',
-                    size: 'small'
+                    size: 'small',
+                    disabled: this.adminDisabled(params.index)
                   },
                   style: {
                     marginRight: '10px'
@@ -121,40 +127,7 @@ export default {
                     }
                   }
                 },
-                '22'
-              ),
-              h(
-                'Button',
-                {
-                  props: {
-                    type: 'primary',
-                    size: 'small'
-                  },
-                  style: {
-                    marginRight: '10px'
-                  },
-                  on: {
-                    click: () => {
-                      this.handleEditArcticle(params.index)
-                    }
-                  }
-                },
-                '编辑'
-              ),
-              h(
-                'Button',
-                {
-                  props: {
-                    type: 'error',
-                    size: 'small'
-                  },
-                  on: {
-                    click: () => {
-                      this.handleHideArcticle(params.index)
-                    }
-                  }
-                },
-                '33'
+                this.adminText(params.index)
               )
             ])
           }
@@ -168,9 +141,22 @@ export default {
   computed: {
   },
   methods: {
-    // 置顶按钮文案
-    topText (index) {
-      return this.userData[index].isTop ? '取消置顶' : '置顶'
+    // 设置、取消管理员
+    adminText (index) {
+      if (this.userData[index].role === 1) {
+        return '设置管理员'
+      } else if (this.userData[index].role === 2) {
+        return '取消管理员'
+      } else {
+        return '超级管理员'
+      }
+    },
+    adminDisabled (index) {
+      if (this.userData[index].role === 3) {
+        return true
+      } else {
+        return false
+      }
     },
     // 隐藏按钮文案
     hideText (index) {
@@ -179,44 +165,6 @@ export default {
     // 时间格式化
     formattime (time) {
       return datetime(time / 1000)
-    },
-    // 置顶文章
-    handleTopArcticle (index) {
-      let _this = this
-      let text
-      axios.post(`${this.$golbal.host}/topArticle`, {
-        id: _this.userData[index]._id,
-        isTop: !_this.userData[index].isTop
-      }).then(function (response) {
-        if (response.status === 200) {
-          text = _this.userData[index].isTop ? '取消置顶' : '置顶'
-          _this.$Message.success(`${text}成功！`)
-          _this.getData(1, _this.curTab)
-        } else {
-          _this.$Message.error(`${text}失败！`)
-        }
-      }).catch(function () {
-        _this.$Message.error('接口异常！')
-      })
-    },
-    // 隐藏文章
-    handleHideArcticle (index) {
-      let _this = this
-      let text
-      axios.post(`${this.$golbal.host}/hideArticle`, {
-        id: _this.userData[index]._id,
-        isShow: !_this.userData[index].isShow
-      }).then(function (response) {
-        if (response.status === 200) {
-          text = _this.userData[index].isShow ? '隐藏' : '取消隐藏'
-          _this.$Message.success(`${text}成功！只会隐藏前台页面的展示而已。`)
-          _this.getData(1, _this.curTab)
-        } else {
-          _this.$Message.error(`${text}失败！`)
-        }
-      }).catch(function () {
-        _this.$Message.error('接口异常！')
-      })
     },
     // 获取用户列表
     getData (current) {
@@ -227,11 +175,36 @@ export default {
           pageCurrent: current,
           pageSize: _this.page.size
         }
-      }).then(function (response) {
+      }).then(function (res) {
         _this.loading = false
-        if (response.status === 200) {
-          _this.userData = response.data.data
-          _this.page.total = response.data.total
+        if (res.data.code === 0) {
+          _this.userData = res.data.data
+          _this.page.total = res.data.total
+        } else {
+          _this.$Message.error(res.data.msg)
+        }
+      }).catch(function () {
+        _this.$Message.error('接口异常！')
+      })
+    },
+    // 设置、取消管理员
+    handleAdminUser (index) {
+      let _this = this
+      let role, text
+      if (this.userData[index].role === 2) {
+        role = 1
+        text = '取消'
+      } else {
+        role = 2
+        text = '设置'
+      }
+      axios.post(`${this.$golbal.host}/adminUser`, {
+        id: _this.userData[index]._id,
+        role: role
+      }).then(function (res) {
+        if (res.data.code === 0) {
+          _this.$Message.success(`${text}管理员成功！`)
+          _this.getData(_this.page.current)
         }
       }).catch(function () {
         _this.$Message.error('接口异常！')
@@ -241,26 +214,6 @@ export default {
     handleChangePage (page) {
       this.page.current = page
       this.getData(page)
-    },
-    // 提交文章
-    handleSubmit () {
-      let _this = this
-      axios.post(`${this.$golbal.host}/${this.articleForm.type}Article`, {
-        id: _this.articleForm.id,
-        title: _this.articleForm.title,
-        type: _this.articleForm.tab,
-        tags: _this.articleForm.tags.join(','),
-        content: _this.articleForm.content
-      }).then(function (response) {
-        if (response.status === 200) {
-          _this.$Message.success('新建成功！')
-          _this.getData(1, _this.curTab)
-        } else {
-          _this.$Message.error('新建失败！')
-        }
-      }).catch(function () {
-        _this.$Message.error('接口异常！')
-      })
     }
   }
 }

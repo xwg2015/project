@@ -22,15 +22,14 @@ mongoose.connect('mongodb://localhost:27017/test', {useMongoClient: true});
 var Cookies = require('cookies');
 app.use(function (req, res, next) {
   req.cookies = new Cookies(req, res);
-  console.log(req.cookies.get('userInfo'))
-  // req.userInfo = {}
-  // if (req.cookies.get('userInfo')) {
-  //   try {
-  //     req.userInfo = JSON.parse(req.cookies.get('userInfo'));
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
+  req.userInfo = {};
+  if (req.cookies.get('userInfo')) {
+    try {
+      req.userInfo = JSON.parse(req.cookies.get('userInfo'));
+    } catch (err) {
+      console.log(err);
+    }
+  }
   next();
 });
 

@@ -2,7 +2,7 @@
   <section class="page page-blog-article">
     <header class="mod-header">
       <h2>文章管理</h2>
-      <Button type="primary" @click="handleAddArcticle">新建文章</Button>
+      <Button type="primary" @click="handleAddArcticle" :disabled="permission">新建文章</Button>
     </header>
     <Tabs v-model="curTab" @on-click="handleChangeTab">
       <TabPane label="技术文章" name="article">
@@ -61,6 +61,7 @@ import { datetime } from '../../lib/format-time'
 export default {
   data () {
     return {
+      permission: true,
       articleModal: false,
       articleForm: {
         id: '',
@@ -84,6 +85,11 @@ export default {
       loading: false,
       articleData: [],
       articleColumns: [
+        {
+          type: 'index',
+          width: 60,
+          align: 'center'
+        },
         {
           title: '标题',
           key: 'title'
@@ -192,13 +198,13 @@ export default {
       axios.post(`${this.$golbal.host}/topArticle`, {
         id: _this.articleData[index]._id,
         isTop: !_this.articleData[index].isTop
-      }).then(function (response) {
-        if (response.status === 200) {
+      }).then(function (res) {
+        if (res.data.code === 0) {
           text = _this.articleData[index].isTop ? '取消置顶' : '置顶'
           _this.$Message.success(`${text}成功！`)
           _this.getData(1, _this.curTab)
         } else {
-          _this.$Message.error(`${text}失败！`)
+          _this.$Message.error(res.data.msg)
         }
       }).catch(function () {
         _this.$Message.error('接口异常！')
@@ -211,8 +217,8 @@ export default {
       axios.post(`${this.$golbal.host}/hideArticle`, {
         id: _this.articleData[index]._id,
         isShow: !_this.articleData[index].isShow
-      }).then(function (response) {
-        if (response.status === 200) {
+      }).then(function (res) {
+        if (res.status === 200) {
           text = _this.articleData[index].isShow ? '隐藏' : '取消隐藏'
           _this.$Message.success(`${text}成功！只会隐藏前台页面的展示而已。`)
           _this.getData(1, _this.curTab)
@@ -257,11 +263,14 @@ export default {
           pageSize: _this.page.size,
           type: type
         }
-      }).then(function (response) {
+      }).then(function (res) {
         _this.loading = false
-        if (response.status === 200) {
-          _this.articleData = response.data.data
-          _this.page.total = response.data.total
+        if (res.data.code === 0) {
+          _this.permission = false
+          _this.articleData = res.data.data
+          _this.page.total = res.data.total
+        } else {
+          _this.$Message.error(res.data.msg)
         }
       }).catch(function () {
         _this.$Message.error('接口异常！')
@@ -286,8 +295,8 @@ export default {
         type: _this.articleForm.tab,
         tags: _this.articleForm.tags.join(','),
         content: _this.articleForm.content
-      }).then(function (response) {
-        if (response.status === 200) {
+      }).then(function (res) {
+        if (res.status === 200) {
           _this.$Message.success('新建成功！')
           _this.getData(1, _this.curTab)
         } else {

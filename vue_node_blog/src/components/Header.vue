@@ -1,28 +1,30 @@
 <template>
   <header class="layout-header">
-    <Menu mode="horizontal" theme="dark" active-name="1">
+    <Menu mode="horizontal" theme="dark" :active-name="curMenuName">
       <div class="logo">小熊的后台很硬</div>
       <div class="nav">
-        <MenuItem name="1">
+        <MenuItem name="home">
           <Icon type="ios-home"></Icon>
           首页
         </MenuItem>
-        <MenuItem name="2">
-          <Icon type="person"></Icon>
-          <template v-if="userInfo.username === ''">
+        <template v-if="userInfo.username === ''">
+          <MenuItem name="user-unlogin">
             <Button type="text" size="small" class="btn-login" @click="handleLogin">登录</Button>
             <Button type="text" size="small" class="btn-register" @click="handleRegister">注册</Button>
-          </template>
-          <template v-if="userInfo.username !== ''">
-              你好，{{ userInfo.username }}
-              <Button type="text" size="small" class="btn-register" @click="handleLogout">退出</Button>
-          </template>
-        </MenuItem>
+          </MenuItem>
+        </template>
+        <template v-if="userInfo.username !== ''">
+          <MenuItem name="user-logined">
+            <Icon type="person"></Icon>
+            <span>你好，{{ userInfo.username }}</span>
+            <Button type="text" size="small" class="btn-register" @click="handleLogout">退出</Button>
+          </MenuItem>
+        </template>
       </div>
     </Menu>
     <Modal
       v-model="userModal"
-      :title="`${typeZh[userForm.type]}`"
+      :title="`${typeZh[userForm.type]}信息`"
       :ok-text="`${typeZh[userForm.type]}`"
       width="300">
       <Form ref="userForm" :model="userForm" :rules="rules">
@@ -47,6 +49,10 @@
           </Input>
         </FormItem>
       </Form>
+      <div class="tip-text">
+        <Button type="text" size="small" @click="handleSwitchModal('login')" v-if="userForm.type === 'register'">已有账号，点击登录</Button>
+        <Button type="text" size="small" @click="handleSwitchModal('register')" v-if="userForm.type === 'login'">没有账号，点击注册</Button>
+      </div>
       <div slot="footer">
         <Button type="primary" size="large" long :loading="userLoading" @click="handleSubmit('userForm')">{{ typeZh[userForm.type] }}</Button>
       </div>
@@ -66,21 +72,44 @@
       left 20px
     .nav
       float right
-    .btn-login, .btn-register
+    .btn-login, .btn-register, .btn-user
       color rgba(255,255,255,.7)
+  .tip-text
+    text-align right
+  .ivu-btn-text
+    color #999
 </style>
 
 <script>
   import axios from 'axios'
+  import { mapState, mapMutations, mapActions } from 'vuex'
+
   export default {
     name: 'header',
     data () {
+      const validatePassword = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'))
+        } else {
+          if (this.userForm.passwordAgain !== '') {
+            this.$refs.userForm.validateField('passwordAgain')
+          }
+          callback()
+        }
+      }
+      const validatePasswordAgain = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'))
+        } else if (value !== this.userForm.password) {
+          callback(new Error('两次密码不一致，请重新输入'))
+        } else {
+          callback()
+        }
+      }
       return {
+        curMenuName: 'home',
         userModal: false,
         userLoading: false,
-        userInfo: {
-          username: ''
-        },
         userForm: {
           type: '',
           username: '',
@@ -97,18 +126,39 @@
             { required: true, message: '请输入用户名', trigger: 'blur' }
           ],
           password: [
-            { required: true, message: '请输入密码', trigger: 'blur' }
+            { required: true, validator: validatePassword, trigger: 'blur' }
           ],
           passwordAgain: [
-            { required: true, message: '请确认确认密码', trigger: 'blur' }
+            { required: true, validator: validatePasswordAgain, trigger: 'blur' }
           ]
         }
       }
     },
     mounted () {
-
+      this.GetUserInfo()
+    },
+    computed: {
+      ...mapState({
+        userInfo: state => state.userInfo
+      })
     },
     methods: {
+      ...mapMutations([
+        'STATE_USERINFO'
+      ]),
+      ...mapActions([
+        'GetUserInfo'
+      ]),
+      // 切换登录、注册
+      handleSwitchModal (type) {
+        this.userForm = {
+          type: type,
+          username: '',
+          password: '',
+          passwordAgain: '',
+          code: ''
+        }
+      },
       // 信息重置
       dataReset () {
         this.userForm = {
@@ -118,10 +168,6 @@
           passwordAgain: '',
           code: ''
         }
-      },
-      // 退出登录
-      handleLogout () {
-
       },
       // 登录弹层
       handleLogin () {
@@ -133,8 +179,26 @@
         this.userModal = true
         this.userForm.type = 'register'
       },
+      // 退出登录
+      handleLogout () {
+        var _this = this
+        axios.post(`${this.$golbal.host}/logout`).then(function (res) {
+          if (res.data.code === 0) {
+            _this.$Message.success('退出成功！')
+            setTimeout(function () {
+              window.location.reload()
+            }, 500)
+          } else {
+            _this.$Message.error('退出失败！')
+          }
+        }).catch(function () {
+          _this.$Message.error('接口异常！')
+        })
+      },
       // 注册、登录提交
       handleSubmit (name) {
+        this.userLoading = true
+
         var _this = this
         var data = {
           username: this.userForm.username,
@@ -148,19 +212,31 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             let _this = this
-            axios.post(`${this.$golbal.host}/${_this.userForm.type}`, data).then(function (response) {
-              if (response.data.code === 0) {
-                _this.userInfo.username = response.data.userInfo.username
+            axios.post(`${this.$golbal.host}/${_this.userForm.type}`, data).then(function (res) {
+              _this.userLoading = false
+              if (res.data.code === 0) {
                 _this.$Message.success(`${_this.typeZh[_this.userForm.type]}成功！`)
                 _this.userModal = false
-                _this.dataReset()
+                // 注册立即登录
+                if (_this.userForm.type === 'register') {
+                  axios.post(`${_this.$golbal.host}/login`, data).then(function (res) {
+                    setTimeout(function () {
+                      window.location.reload()
+                    }, 500)
+                  })
+                }
               } else {
-                _this.$Message.error(response.data.msg)
+                // 用户名已被注册
+                if (_this.userForm.type === 'register') {
+                  _this.userForm.username = ''
+                }
+                _this.$Message.error(res.data.msg)
               }
             }).catch(function () {
               _this.$Message.error('接口异常！')
             })
           } else {
+            _this.userLoading = false
             _this.$Message.error('信息填写有误！')
           }
         })
