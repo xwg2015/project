@@ -5,45 +5,8 @@
     </header>
     <Table border :columns="articleColumns" :loading="loading" :data="userData"></Table>
     <Page :total="page.total" :current="page.current" :page-size="page.size" class-name="mod-pagination" show-total @on-change="handleChangePage"></Page>
-    <!-- <Modal
-      v-model="articleModal"
-      width="80"
-      :title="`${typeZh[articleForm.type]}文章`"
-      ok-text="提交"
-      @on-ok="handleSubmit">
-      <Form :model="articleForm" :label-width="50">
-        <FormItem label="标题">
-          <Input v-model="articleForm.title" placeholder="请输入标题"></Input>
-        </FormItem>
-        <FormItem label="类型">
-          <Select v-model="articleForm.tab" style="width:100px">
-            <Option value="article">技术文章</Option>
-            <Option value="journal">日志</Option>
-          </Select>
-        </FormItem>
-        <FormItem label="标签">
-          <Tag v-for="item in articleForm.tags" :key="item" :name="item" closable @on-close="handleCloseTag">{{item}}</Tag>
-          <Input v-model="curTag" size="small" class="tag-input" @keyup.enter.native="handleAddTag" placeholder="请输入标签名"></Input>
-          <Button icon="ios-plus-empty" type="dashed" size="small" @click="handleAddTag">添加标签</Button>
-        </FormItem>
-        <FormItem label="内容">
-          <mavon-editor v-model="articleForm.content" />
-        </FormItem>
-      </Form>
-    </Modal> -->
   </section>
 </template>
-
-<style lang="stylus">
-  .mod-header
-    display flex
-    align-items center
-    justify-content space-between
-    height 60px
-  .mod-pagination
-    margin 30px 0
-    text-align center
-</style>
 
 <script>
 import axios from 'axios'

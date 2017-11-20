@@ -60,26 +60,6 @@
   </header>
 </template>
 
-<style lang="stylus">
-  .layout-header
-    .logo
-      line-height 30px
-      font-size 16px
-      color #fff
-      float left
-      position relative
-      top 15px
-      left 20px
-    .nav
-      float right
-    .btn-login, .btn-register, .btn-user
-      color rgba(255,255,255,.7)
-  .tip-text
-    text-align right
-  .ivu-btn-text
-    color #999
-</style>
-
 <script>
   import axios from 'axios'
   import { mapState, mapMutations, mapActions } from 'vuex'
@@ -122,15 +102,9 @@
           login: '登录'
         },
         rules: {
-          username: [
-            { required: true, message: '请输入用户名', trigger: 'blur' }
-          ],
-          password: [
-            { required: true, validator: validatePassword, trigger: 'blur' }
-          ],
-          passwordAgain: [
-            { required: true, validator: validatePasswordAgain, trigger: 'blur' }
-          ]
+          username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+          password: [{ required: true, validator: validatePassword, trigger: 'blur' }],
+          passwordAgain: [{ required: true, validator: validatePasswordAgain, trigger: 'blur' }]
         }
       }
     },
@@ -197,21 +171,21 @@
       },
       // 注册、登录提交
       handleSubmit (name) {
-        this.userLoading = true
-
         var _this = this
+
+        _this.userLoading = true
+
         var data = {
-          username: this.userForm.username,
-          password: this.userForm.password
+          username: _this.userForm.username,
+          password: _this.userForm.password
         }
 
-        if (this.userForm.type === 'register') {
-          data.code = this.userForm.code
+        if (_this.userForm.type === 'register') {
+          data.code = _this.userForm.code
         }
 
-        this.$refs[name].validate((valid) => {
+        _this.$refs[name].validate((valid) => {
           if (valid) {
-            let _this = this
             axios.post(`${this.$golbal.host}/${_this.userForm.type}`, data).then(function (res) {
               _this.userLoading = false
               if (res.data.code === 0) {
@@ -225,6 +199,9 @@
                     }, 500)
                   })
                 }
+                setTimeout(function () {
+                  window.location.reload()
+                }, 500)
               } else {
                 // 用户名已被注册
                 if (_this.userForm.type === 'register') {

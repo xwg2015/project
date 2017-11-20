@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import BlogArticle from '@/pages/blog/Article'
-import BlogJournal from '@/pages/blog/Journal'
+import BlogProject from '@/pages/blog/Project'
+import BlogResume from '@/pages/blog/Resume'
 import SystemUser from '@/pages/system/User'
 
 Vue.use(Router)
@@ -10,8 +11,9 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'SystemUser',
-      component: SystemUser
+      redirect: {
+        name: 'SystemUser'
+      }
     },
     {
       path: '/system/user',
@@ -24,9 +26,14 @@ export default new Router({
       component: BlogArticle
     },
     {
-      path: '/blog/journal',
-      name: 'BlogJournal',
-      component: BlogJournal
+      path: '/blog/project',
+      name: 'BlogProject',
+      component: BlogProject
+    },
+    {
+      path: '/blog/resume',
+      name: 'BlogResume',
+      component: BlogResume
     }
   ]
 })

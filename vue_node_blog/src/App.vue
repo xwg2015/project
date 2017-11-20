@@ -31,20 +31,6 @@ export default {
 }
 </script>
 
-<style>
-  .layout {
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
-    border: 1px solid #d7dde4;
-    background: #f5f7f9;
-  }
-  .layout-content {
-    flex: 1;
-    margin: 15px;
-    padding-bottom: 20px;
-    overflow: hidden;
-    background: #fff;
-    border-radius: 4px;
-  }
+<style lang="stylus">
+  @import 'assets/css/all.styl'
 </style>

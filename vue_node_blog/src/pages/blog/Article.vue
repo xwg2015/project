@@ -6,10 +6,10 @@
     </header>
     <Tabs v-model="curTab" @on-click="handleChangeTab">
       <TabPane label="技术文章" name="article">
-        <Table border :columns="articleColumns" :loading="loading" :data="articleData"></Table>
+        <Table border :row-class-name="rowClassName" :columns="articleColumns" :loading="loading" :data="articleData"></Table>
       </TabPane>
       <TabPane label="日志" name="journal">
-        <Table border :columns="articleColumns" :loading="loading" :data="articleData"></Table>
+        <Table border :row-class-name="rowClassName" :columns="articleColumns" :loading="loading" :data="articleData"></Table>
       </TabPane>
     </Tabs>
     <Page :total="page.total" :current="page.current" :page-size="page.size" class-name="mod-pagination" show-total @on-change="handleChangePage"></Page>
@@ -35,25 +35,12 @@
           <Button icon="ios-plus-empty" type="dashed" size="small" @click="handleAddTag">添加标签</Button>
         </FormItem>
         <FormItem label="内容">
-          <mavon-editor v-model="articleForm.content" />
+          <mavon-editor v-model="articleForm.content" default_open="edit" />
         </FormItem>
       </Form>
     </Modal>
   </section>
 </template>
-
-<style lang="stylus">
-  .mod-header
-    display flex
-    align-items center
-    justify-content space-between
-    height 60px
-  .mod-pagination
-    margin 30px 0
-    text-align center
-  .tag-input
-    width 100px
-</style>
 
 <script>
 import axios from 'axios'
@@ -73,11 +60,12 @@ export default {
       },
       typeZh: {
         add: '新建',
-        edit: '编辑'
+        update: '更新',
+        delete: '删除'
       },
       page: {
         current: 1,
-        size: 5,
+        size: 10,
         total: 0
       },
       curTag: '',
@@ -120,7 +108,7 @@ export default {
                 'Button',
                 {
                   props: {
-                    type: 'primary',
+                    type: 'success',
                     size: 'small'
                   },
                   style: {
@@ -156,7 +144,7 @@ export default {
                 'Button',
                 {
                   props: {
-                    type: 'error',
+                    type: 'warning',
                     size: 'small'
                   },
                   on: {
@@ -179,6 +167,14 @@ export default {
   computed: {
   },
   methods: {
+    // 隐藏项目行样式
+    rowClassName (row, index) {
+      if (!this.articleData[index].isShow) {
+        return 'table-hide-row'
+      } else {
+        return ''
+      }
+    },
     // 置顶按钮文案
     topText (index) {
       return this.articleData[index].isTop ? '取消置顶' : '置顶'
@@ -220,7 +216,7 @@ export default {
       }).then(function (res) {
         if (res.status === 200) {
           text = _this.articleData[index].isShow ? '隐藏' : '取消隐藏'
-          _this.$Message.success(`${text}成功！只会隐藏前台页面的展示而已。`)
+          _this.$Message.success(`${text}成功！该操作只会影响前台页面的展示而已。`)
           _this.getData(1, _this.curTab)
         } else {
           _this.$Message.error(`${text}失败！`)

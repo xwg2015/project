@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var Article = require("../models/article");
 var User = require("../models/user");
+var Project = require("../models/project");
  
 /**
  * 统一返回格式
@@ -316,6 +317,107 @@ router.post('/adminUser', function (req, res, next) {
       });
     }
   });
+});
+
+/**
+ * 获取全部项目
+ * TODO: 实现模糊查询
+ */
+router.get("/getProject", function (req, res, next) {
+  permission(req, res, next, function(userInfo) {
+    var query;
+
+    if (userInfo && userInfo.role === 3) {
+      query = { type: req.query.type }
+    } else if (userInfo && userInfo.role === 2) {
+      query = { type: req.query.type, author: userInfo.username }
+    }
+
+    Project.find(query, function(err, data) {
+      if (err) throw err;
+      responseData.total = data.length;
+    });
+  
+    Project.find(query)
+      .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
+      .limit(Number(req.query.pageSize))
+      .sort({
+        _id: -1
+      })
+      .exec(function (err, data) {
+        if (err) throw err;
+        responseData.data = data;
+        res.json(responseData);
+      });
+  });
+});
+
+// 新建项目
+router.post("/addProject", function (req, res, next) {
+  permission(req, res, next, function(userInfo) {
+   var project = new Project({
+     author: userInfo.username,
+     name: req.body.name,
+     about: req.body.about,
+     link: req.body.link,
+     cover: req.body.cover
+   });
+
+   project.save(function(err) {
+     if (err) throw err;
+     res.json(responseData);
+   });
+ });
+});
+
+// 更新项目
+router.post("/updateProject", function (req, res, next) {
+  permission(req, res, next, function(userInfo) {
+   var query = { _id: req.body.id };
+   var update = {
+     $set: {
+       author: userInfo.username,
+       name: req.body.name,
+       about: req.body.about,
+       link: req.body.link,
+       cover: req.body.cover
+     }
+   };
+
+   Project.update(query, update, function(err) {
+     if (err) throw err;
+     res.json(responseData);
+   });
+ });
+});
+
+// 删除项目
+router.post("/deleteProject", function (req, res, next) {
+  permission(req, res, next, function(userInfo) {
+   var query = { _id: req.body.id };
+
+   Project.remove(query, function(err) {
+     if (err) throw err;
+     res.json(responseData);
+   });
+ });
+});
+
+// 前台页面隐藏文章、显示文章
+router.post("/hideProject", function (req, res, next) {
+  permission(req, res, next, function(userInfo) {
+   var query = { _id: req.body.id };
+   var update = {
+     $set: {
+       isShow: req.body.isShow
+     }
+   };
+
+   Project.update(query, update, function(err) {
+     if (err) throw err;
+     res.json(responseData);
+   });
+ });
 });
 
 module.exports = router;

@@ -1,7 +1,7 @@
 <template>
   <aside class="layout-aside">
     <Affix :offset-top="15">
-      <Menu theme="dark" :active-name="$route.path" width="auto" :open-names="['system']" @on-select="changeMenu">
+      <Menu theme="dark" :active-name="activeName" width="auto" :open-names="[openName]" @on-select="changeMenu">
         <Submenu name="system">
           <template slot="title">
             <Icon type="android-settings"></Icon>
@@ -15,8 +15,8 @@
             个人博客后台
           </template>
           <MenuItem name="/blog/article">文章管理</MenuItem>
-          <MenuItem name="/blog/resume">简历管理</MenuItem>
           <MenuItem name="/blog/project">项目管理</MenuItem>
+          <MenuItem name="/blog/resume">简历管理</MenuItem>
         </Submenu>
         <Submenu name="bxj">
           <template slot="title">
@@ -40,6 +40,17 @@
 <script>
   export default {
     name: 'aside',
+    data () {
+      return {
+        activeName: '',
+        openName: 'system'
+      }
+    },
+    created () {
+      let reg = /\/(.*)\//
+      this.activeName = this.$route.path
+      this.openName = this.$route.path.match(reg)[1]
+    },
     methods: {
       changeMenu: function (name) {
         this.$router.push({path: name})
