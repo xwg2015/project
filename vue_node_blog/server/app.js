@@ -15,6 +15,7 @@ var app = express();
 
 // 连接数据库
 var mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 mongoose.connect('mongodb://127.0.0.1:27017/test', {useMongoClient: true});
 
 // cookie设置

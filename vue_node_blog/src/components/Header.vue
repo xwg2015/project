@@ -60,6 +60,11 @@
   </header>
 </template>
 
+<style lang="stylus">
+.tip-text
+  text-align right
+</style>
+
 <script>
   import axios from 'axios'
   import { mapState, mapMutations, mapActions } from 'vuex'

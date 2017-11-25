@@ -36,7 +36,7 @@
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button type="primary" size="large" long :loading="submitloading" @click="handleSubmit('projectForm')">提交</Button>
+        <Button type="primary" size="large" :loading="submitloading" @click="handleSubmit('projectForm')">提 交</Button>
       </div>
     </Modal>
   </section>

@@ -16,11 +16,9 @@
     <Modal
       v-model="articleModal"
       width="80"
-      :title="`${typeZh[articleForm.type]}文章`"
-      ok-text="提交"
-      @on-ok="handleSubmit">
-      <Form :model="articleForm" :label-width="50">
-        <FormItem label="标题">
+      :title="`${typeZh[articleForm.type]}文章`">
+      <Form :model="articleForm" ref="articleForm" :rules="rules" :label-width="50">
+        <FormItem label="标题" prop="title">
           <Input v-model="articleForm.title" placeholder="请输入标题"></Input>
         </FormItem>
         <FormItem label="类型">
@@ -29,24 +27,40 @@
             <Option value="journal">日志</Option>
           </Select>
         </FormItem>
-        <FormItem label="标签">
+        <FormItem label="标签" prop="tags">
           <Tag v-for="item in articleForm.tags" :key="item" :name="item" closable @on-close="handleCloseTag">{{item}}</Tag>
           <Input v-model="curTag" size="small" class="tag-input" @keyup.enter.native="handleAddTag" placeholder="请输入标签名"></Input>
           <Button icon="ios-plus-empty" type="dashed" size="small" @click="handleAddTag">添加标签</Button>
         </FormItem>
-        <FormItem label="内容">
+        <FormItem label="内容" prop="content">
+          <input type="hidden" v-model="articleForm.content">
           <mavon-editor v-model="articleForm.content" default_open="edit" />
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button type="primary" size="large" :loading="submitloading" @click="handleSubmit('articleForm')">提 交</Button>
+      </div>
     </Modal>
   </section>
 </template>
+
+<style lang="stylus">
+.tag-input
+  width 100px
+</style>
 
 <script>
 import axios from 'axios'
 import { datetime } from '../../lib/format-time'
 export default {
   data () {
+    const validateTags = (rule, value, callback) => {
+      if (!value.length) {
+        callback(new Error('请输入至少一个标签'))
+      } else {
+        callback()
+      }
+    }
     return {
       permission: true,
       articleModal: false,
@@ -71,6 +85,7 @@ export default {
       curTag: '',
       curTab: 'article',
       loading: false,
+      submitloading: false,
       articleData: [],
       articleColumns: [
         {
@@ -100,7 +115,7 @@ export default {
         {
           title: '操作',
           key: 'action',
-          width: 240,
+          width: 280,
           align: 'center',
           render: (h, params) => {
             return h('div', [
@@ -147,6 +162,9 @@ export default {
                     type: 'warning',
                     size: 'small'
                   },
+                  style: {
+                    marginRight: '10px'
+                  },
                   on: {
                     click: () => {
                       this.handleHideArcticle(params.index)
@@ -154,11 +172,44 @@ export default {
                   }
                 },
                 this.hideText(params.index)
-              )
+              ),
+              h('Poptip', {
+                props: {
+                  confirm: true,
+                  width: '200',
+                  title: '你确定要删除这个项目吗？',
+                  transfer: true
+                },
+                on: {
+                  'on-ok': () => {
+                    this.handleSubmit()
+                  }
+                }
+              }, [
+                h('Button',
+                  {
+                    props: {
+                      type: 'error',
+                      size: 'small'
+                    },
+                    on: {
+                      click: () => {
+                        this.handleDeleteArticle(params.index)
+                      }
+                    }
+                  },
+                  '删除'
+                )
+              ])
             ])
           }
         }
-      ]
+      ],
+      rules: {
+        title: [{ required: true, min: 1, max: 15, message: '文章标题限1-25个字', trigger: 'blur' }],
+        tags: [{ required: true, validator: validateTags, trigger: 'change' }],
+        content: [{ required: true, message: '请输入文章内容', trigger: 'blur' }]
+      }
     }
   },
   mounted () {
@@ -186,6 +237,16 @@ export default {
     // 时间格式化
     formattime (time) {
       return datetime(time / 1000)
+    },
+    // 新增文章标签
+    handleAddTag () {
+      this.articleForm.tags.push(this.curTag)
+      this.curTag = ''
+    },
+    // 删除文章标签
+    handleCloseTag (event, name) {
+      let index = this.articleForm.tags.indexOf(name)
+      this.articleForm.tags.splice(index, 1)
     },
     // 置顶文章
     handleTopArcticle (index) {
@@ -232,7 +293,7 @@ export default {
         id: '',
         type: 'add',
         title: '',
-        tab: 'article',
+        tab: this.curTab,
         tags: [],
         content: ''
       }
@@ -242,11 +303,22 @@ export default {
       this.articleModal = true
       this.articleForm = {
         id: this.articleData[index]._id,
-        type: 'edit',
+        type: 'update',
         title: this.articleData[index].title,
         tab: this.articleData[index].type,
         tags: this.articleData[index].tags.split(','),
         content: this.articleData[index].content
+      }
+    },
+    // 删除文章
+    handleDeleteArticle (index) {
+      this.articleForm = {
+        id: this.articleData[index]._id,
+        type: 'delete',
+        title: '',
+        tab: '',
+        tags: [],
+        content: ''
       }
     },
     // 获取文章列表
@@ -283,34 +355,42 @@ export default {
       this.getData(1, tab)
     },
     // 提交文章
-    handleSubmit () {
+    handleSubmit (name) {
       let _this = this
-      axios.post(`${this.$golbal.host}/${this.articleForm.type}Article`, {
+      // 新增、更新
+      if (name) {
+        _this.$refs[name].validate((valid) => {
+          if (valid) {
+            _this.submitloading = true
+            _this.axiosSubmit()
+          }
+        })
+        // 删除
+      } else {
+        _this.axiosSubmit()
+      }
+    },
+    // 提交请求
+    axiosSubmit () {
+      let _this = this
+      axios.post(`${_this.$golbal.host}/${_this.articleForm.type}Article`, {
         id: _this.articleForm.id,
         title: _this.articleForm.title,
         type: _this.articleForm.tab,
         tags: _this.articleForm.tags.join(','),
         content: _this.articleForm.content
       }).then(function (res) {
-        if (res.status === 200) {
-          _this.$Message.success('新建成功！')
+        _this.submitloading = false
+        _this.articleModal = false
+        if (res.data.code === 0) {
+          _this.$Message.success(`${_this.typeZh[_this.articleForm.type]}成功！`)
           _this.getData(1, _this.curTab)
         } else {
-          _this.$Message.error('新建失败！')
+          _this.$Message.error(`${_this.typeZh[_this.articleForm.type]}失败！`)
         }
       }).catch(function () {
         _this.$Message.error('接口异常！')
       })
-    },
-    // 新增文章标签
-    handleAddTag () {
-      this.articleForm.tags.push(this.curTag)
-      this.curTag = ''
-    },
-    // 删除文章标签
-    handleCloseTag (event, name) {
-      let index = this.articleForm.tags.indexOf(name)
-      this.articleForm.tags.splice(index, 1)
     }
   }
 }

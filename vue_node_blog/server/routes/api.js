@@ -51,14 +51,14 @@ var permission = function  (req, res, next, callback) {
   User.findOne(responseData.userInfo).then(function (userInfo) {
     if (!userInfo) {
       responseData.code = 1;
-      responseData.msg = "先登录再上车！";
+      responseData.msg = "先登录再上车~";
       res.json(responseData);
       return;
     }
 
     if (userInfo && userInfo.role === 1) {
       responseData.code = 403;
-      responseData.msg = "有没有权限心里没点b数吗？";
+      responseData.msg = "与小熊PY交易能获取更多的权限，嘿嘿嘿~";
       res.json(responseData);
       return;
     }
@@ -84,9 +84,8 @@ router.get("/getArticle", function (req, res, next) {
     Article.find(query, function(err, data) {
       if (err) throw err;
       responseData.total = data.length;
-    });
-  
-    Article.find(query)
+
+      Article.find(query)
       .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
       .limit(Number(req.query.pageSize))
       .sort({
@@ -98,6 +97,7 @@ router.get("/getArticle", function (req, res, next) {
         responseData.data = data;
         res.json(responseData);
       });
+    });
   });
 });
 
@@ -120,7 +120,7 @@ router.post("/addArticle", function (req, res, next) {
 });
 
 // 更新文章
-router.post("/editArticle", function (req, res, next) {
+router.post("/updateArticle", function (req, res, next) {
    permission(req, res, next, function(userInfo) {
     var query = { _id: req.body.id };
     var update = {
@@ -138,6 +138,18 @@ router.post("/editArticle", function (req, res, next) {
       res.json(responseData);
     });
   });
+});
+
+// 删除项目
+router.post("/deleteArticle", function (req, res, next) {
+  permission(req, res, next, function(userInfo) {
+   var query = { _id: req.body.id };
+
+   Article.remove(query, function(err) {
+     if (err) throw err;
+     res.json(responseData);
+   });
+ });
 });
 
 // 置顶文章、取消置顶
@@ -199,9 +211,8 @@ router.get("/getUser", function (req, res, next) {
       User.find({}, function(err, data) {
         if (err) throw err;
         responseData.total = data.length;
-      });
-    
-      User.find({})
+
+        User.find({})
         .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
         .limit(Number(req.query.pageSize))
         .sort({
@@ -213,6 +224,7 @@ router.get("/getUser", function (req, res, next) {
           responseData.data = data;
           res.json(responseData);
         });
+      });
     }
   });
 });
@@ -299,7 +311,7 @@ router.post("/adminUser", function (req, res, next) {
   permission(req, res, next, function(userInfo) {
     if (userInfo && userInfo.role === 2) {
       responseData.code = 403;
-      responseData.msg = "有没有权限心里没点b数吗？";
+      responseData.msg = "与小熊PY交易能获取更多的权限，嘿嘿嘿~";
       res.json(responseData);
       return;
     }
@@ -337,9 +349,7 @@ router.get("/getProject", function (req, res, next) {
     Project.find(query, function(err, data) {
       if (err) throw err;
       responseData.total = data.length;
-    });
-  
-    Project.find(query)
+      Project.find(query)
       .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
       .limit(Number(req.query.pageSize))
       .sort({
@@ -350,6 +360,7 @@ router.get("/getProject", function (req, res, next) {
         responseData.data = data;
         res.json(responseData);
       });
+    });
   });
 });
 

@@ -29,7 +29,7 @@ export default {
       },
       page: {
         current: 1,
-        size: 5,
+        size: 10,
         total: 0
       },
       curTag: '',
