@@ -17,8 +17,8 @@ router.use(function (req, res, next) {
     data: [],
     total: 0,
     userInfo: {
-      _id: (req.cookies.get('userInfo') && JSON.parse(req.cookies.get('userInfo'))._id) || null,
-      username: (req.cookies.get('userInfo') && new Buffer(JSON.parse(req.cookies.get('userInfo')).username, 'base64').toString()) || null
+      _id: (req.cookies.get("userInfo") && JSON.parse(req.cookies.get("userInfo"))._id) || null,
+      username: (req.cookies.get("userInfo") && new Buffer(JSON.parse(req.cookies.get("userInfo")).username, "base64").toString()) || null
     }
   };
   next();
@@ -28,12 +28,12 @@ router.use(function (req, res, next) {
  * 判断用户是否登录
  * code: 1 未登录
  */
-router.get('/isLogin', function (req, res, next) {
-  if (req.cookies.get('userInfo')) {
-    responseData.msg = '已登录';
+router.get("/isLogin", function (req, res, next) {
+  if (req.cookies.get("userInfo")) {
+    responseData.msg = "已登录";
   } else {
     responseData.code = 1;
-    responseData.msg = '未登录';
+    responseData.msg = "未登录";
   }
   res.json(responseData);
 });
@@ -51,14 +51,14 @@ var permission = function  (req, res, next, callback) {
   User.findOne(responseData.userInfo).then(function (userInfo) {
     if (!userInfo) {
       responseData.code = 1;
-      responseData.msg = '先登录再上车！';
+      responseData.msg = "先登录再上车！";
       res.json(responseData);
       return;
     }
 
     if (userInfo && userInfo.role === 1) {
       responseData.code = 403;
-      responseData.msg = '有没有权限心里没点b数吗？';
+      responseData.msg = "有没有权限心里没点b数吗？";
       res.json(responseData);
       return;
     }
@@ -144,7 +144,7 @@ router.post("/editArticle", function (req, res, next) {
 router.post("/topArticle", function (req, res, next) {
    permission(req, res, next, function(userInfo) {
     if (userInfo && userInfo.role === 2) {
-      var text = req.body.isTop ? '置顶' : '取消置顶'
+      var text = req.body.isTop ? "置顶" : "取消置顶"
       responseData.code = 403;
       responseData.msg = `${text}文章请联系超级管理员！`;
       res.json(responseData);
@@ -190,7 +190,7 @@ router.get("/getUser", function (req, res, next) {
    permission(req, res, next, function(userInfo) {
     if (userInfo && userInfo.role === 2) {
       responseData.code = 403;
-      responseData.msg = '只有超级管理员才有权查看用户列表！';
+      responseData.msg = "只有超级管理员才有权查看用户列表！";
       res.json(responseData);
       return;
     }
@@ -230,17 +230,18 @@ router.post("/register", function (req, res, next) {
   }).then(function(userInfo) {
     if (userInfo) {
       responseData.code = 1;
-      responseData.msg = '该用户名已被注册！';
+      responseData.msg = "该用户名已被注册！";
       res.json(responseData);
       return;
     }
 
     if (req.body.code === "_admin1122@") {
-      role = 3
+      // 想成为超管，不存在的
+      role = 2;
     } else if (req.body.code === "_admin1028@") {
-      role = 2
+      role = 2;
     } else {
-      role = 1
+      role = 1;
     }
     var user = new User({
       username: req.body.username,
@@ -266,21 +267,21 @@ router.post("/login", function (req, res, next) {
   }).then(function(userInfo) {
     if (!userInfo) {
       responseData.code = 1;
-      responseData.msg = '用户名或密码错误';
+      responseData.msg = "用户名或密码错误";
       res.json(responseData);
       return;
     }
-    responseData.msg = '登录成功';
+    responseData.msg = "登录成功";
     responseData.userInfo.username = userInfo.username;
     /**
      * NOTE:
-     * http的header字符集支持US-ASCII子集的字符集，故设置中文是'utf8'时就会报错
-     * new Buffer('xxx').toString('base64')    转base64字符
-     * new Buffer('xxx', 'base64').toString()  base64字符还原
+     * http的header字符集支持US-ASCII子集的字符集，故设置中文是"utf8"时就会报错
+     * new Buffer("xxx").toString("base64")    转base64字符
+     * new Buffer("xxx", "base64").toString()  base64字符还原
      */
-    req.cookies.set('userInfo', JSON.stringify({
+    req.cookies.set("userInfo", JSON.stringify({
       _id: userInfo._id,
-      username: new Buffer(userInfo.username).toString('base64')
+      username: new Buffer(userInfo.username).toString("base64")
     }));
     res.json(responseData);
     return;
@@ -289,16 +290,16 @@ router.post("/login", function (req, res, next) {
 
 // 用户退出
 router.post("/logout", function (req, res, next) {
-  req.cookies.set('userInfo', null);
+  req.cookies.set("userInfo", null);
   res.json(responseData);
 });
 
 // 设置、取消管理员
-router.post('/adminUser', function (req, res, next) {
+router.post("/adminUser", function (req, res, next) {
   permission(req, res, next, function(userInfo) {
     if (userInfo && userInfo.role === 2) {
       responseData.code = 403;
-      responseData.msg = '有没有权限心里没点b数吗？';
+      responseData.msg = "有没有权限心里没点b数吗？";
       res.json(responseData);
       return;
     }
