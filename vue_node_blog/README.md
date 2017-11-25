@@ -25,7 +25,7 @@
 1. nodejs + express + mongonDB
 
 ## 注意点
-前后端维持一份package.json
+前后端维护一份package.json
 
 ## 本地运行
 
