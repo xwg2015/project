@@ -23,11 +23,7 @@ import XFooter from './components/Footer'
 import XAside from './components/Aside'
 export default {
   name: 'app',
-  components: {
-    XHeader,
-    XFooter,
-    XAside
-  }
+  components: { XHeader, XFooter, XAside }
 }
 </script>
 

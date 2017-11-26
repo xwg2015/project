@@ -7,10 +7,10 @@ import store from './store'
 // 引入iview组件库
 import iView from 'iview'
 import 'iview/dist/styles/iview.css'
+
 // 引入富文本编辑器
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-// import axios from 'axios'
 
 /**
  * FIXME:

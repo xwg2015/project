@@ -1,5 +1,8 @@
 <template>
   <section class="page page-system-user">
+    <Alert class="mod-alert" show-icon closable>
+      温馨提示：目前只有超级管理员才有权限访问。
+    </Alert>
     <header class="mod-header">
       <h2>用户管理</h2>
     </header>
