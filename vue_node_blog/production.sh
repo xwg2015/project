@@ -11,7 +11,7 @@ cp -R ./dist/js ../../production/blog_admin_production/public
 
 echo '静态资源拷贝完成'
 
-cp -R ./dist/blog_admin.html ../../production/blog_admin_production/views
+cp -R ./dist/admin.html ../../production/blog_admin_production/views
 
 echo '页面拷贝完成'
 

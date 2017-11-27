@@ -45,8 +45,9 @@
 </template>
 
 <style lang="stylus">
-.tag-input
-  width 100px
+.page-blog-article
+  .tag-input
+    width 100px
 </style>
 
 <script>
