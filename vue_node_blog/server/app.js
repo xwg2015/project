@@ -2,8 +2,13 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
+var compression = require('compression')
 
 var app = express();
+
+// nodejs通过compression中间件开通gzip
+app.use(compression());
+app.use(logger('dev'));
 
 // You need to use express.cookieParser() before app.router; middleware is run in order, meaning it’s never even reaching cookieParser() before your route is executed.
 // var cookieParser = require('cookie-parser');
@@ -45,7 +50,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 // app.use(express.static(path.join(__dirname, 'public')));
-app.use(logger('dev'));
 
 // api接口
 app.use('/', require('./routes/index'));
