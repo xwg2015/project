@@ -48,6 +48,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logger('dev'));
 
 // api接口
+app.use('/', require('./routes/index'));
 app.use('/api', require('./routes/api'));
 
 /**
