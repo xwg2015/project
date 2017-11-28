@@ -44,8 +44,7 @@
   </section>
 </template>
 
-<style lang="stylus">
-.page-blog-article
+<style lang="stylus" scoped>
   .tag-input
     width 100px
 </style>
