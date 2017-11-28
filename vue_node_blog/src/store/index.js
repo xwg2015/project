@@ -20,7 +20,7 @@ Vue.use(Vuex)
 
 // 开发环境接口跨域proxy
 // 生产环境直接调用线上的
-const dev = process.env.NODE_ENV === 'development' ? '/dev' : '//xiongwengang.xyz:3000'
+const dev = process.env.NODE_ENV === 'development' ? '/dev' : '//xiongwengang.xyz'
 const host = `${dev}/api`
 
 let state = {
