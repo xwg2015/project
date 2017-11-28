@@ -15,3 +15,8 @@ cp -R ./dist/admin.html ../../production/admin_production/views
 
 echo '页面拷贝完成'
 
+find ../../production/admin_production/app.js | xargs perl -pi -e 's|127.0.0.1:27017/test|xiongwengang.xyz:27017/blog|g'
+
+find ../../production/admin_production/app.js | xargs perl -pi -e 's|useMongoClient: true|user: "admin", pass: "admin2015@", auth: { authdb: "admin" }, useMongoClient: true|g'
+
+echo '数据库操作连接代码替换完成'

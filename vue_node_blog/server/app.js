@@ -1,6 +1,5 @@
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
 var logger = require('morgan');
 var compression = require('compression')
 
@@ -21,7 +20,11 @@ app.use(logger('dev'));
 // 连接数据库
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
-mongoose.connect('mongodb://127.0.0.1:27017/test', {useMongoClient: true});
+var url = 'mongodb://127.0.0.1:27017/test';
+var opts = {
+  useMongoClient: true
+}
+mongoose.connect(url, opts);
 
 // cookie设置
 var Cookies = require('cookies');
@@ -43,13 +46,13 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// view engine setup，vuejs混合nodejs项目，无模板
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'jade');
+// view engine setup，vuejs混合nodejs项目，html模板
+app.set('views', path.join(__dirname, 'views'));
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-// app.use(express.static(path.join(__dirname, 'public')));
+// 静态资源路径
+app.use(express.static(path.join(__dirname, 'public')));
 
 // api接口
 app.use('/', require('./routes/index'));
