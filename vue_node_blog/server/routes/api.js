@@ -110,7 +110,8 @@ router.post("/addArticle", function (req, res, next) {
       title: req.body.title,
       type: req.body.type,
       tags: req.body.tags,
-      content: req.body.content
+      content: req.body.content,
+      createTime: req.body.createTime
     });
 
     article.save(function(err) {
@@ -259,7 +260,8 @@ router.post("/register", function (req, res, next) {
     var user = new User({
       username: req.body.username,
       password: md5(req.body.password),
-      role: role
+      role: role,
+      createTime: req.body.createTime
     });
   
     user.save(function(err) {
@@ -373,7 +375,8 @@ router.post("/addProject", function (req, res, next) {
      name: req.body.name,
      about: req.body.about,
      link: req.body.link,
-     cover: req.body.cover
+     cover: req.body.cover,
+     createTime: req.body.createTime
    });
 
    project.save(function(err) {

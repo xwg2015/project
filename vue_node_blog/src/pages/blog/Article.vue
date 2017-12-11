@@ -106,10 +106,10 @@ export default {
           key: 'tags'
         },
         {
-          title: '时间',
-          key: 'time',
+          title: '创建时间',
+          key: 'createTime',
           render: (h, params) => {
-            return h('span', this.formattime(new Date(params.row.time)))
+            return h('span', this.formattime(new Date(params.row.createTime)))
           }
         },
         {
@@ -378,7 +378,8 @@ export default {
         title: _this.articleForm.title,
         type: _this.articleForm.tab,
         tags: _this.articleForm.tags.join(','),
-        content: _this.articleForm.content
+        content: _this.articleForm.content,
+        createTime: new Date()
       }).then(function (res) {
         _this.submitloading = false
         _this.articleModal = false

@@ -15,10 +15,11 @@ var userSchema = new Schema({
     type: Number,
     default: 1
   },
-  time: {
+  updateTime: {
     type: Date,
     default: Date.now
-  }
+  },
+  createTime: Date
 });
 
 module.exports = mongoose.model("User", userSchema);

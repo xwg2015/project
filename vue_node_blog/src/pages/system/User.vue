@@ -63,10 +63,10 @@ export default {
           }
         },
         {
-          title: '时间',
-          key: 'time',
+          title: '注册时间',
+          key: 'createTime',
           render: (h, params) => {
-            return h('span', this.formattime(new Date(params.row.time)))
+            return h('span', this.formattime(new Date(params.row.createTime)))
           }
         },
         {

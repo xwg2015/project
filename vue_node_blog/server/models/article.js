@@ -26,10 +26,11 @@ var articleSchema = new Schema({
       type: Boolean,
       default: true
     },
-    time: {
+    updateTime: {
       type: Date,
       default: Date.now
-    }
+    },
+    createTime: Date
 });
 
 module.exports = mongoose.model('Article', articleSchema);

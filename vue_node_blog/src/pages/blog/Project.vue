@@ -110,10 +110,10 @@ export default {
           key: 'cover'
         },
         {
-          title: '时间',
-          key: 'time',
+          title: '创建时间',
+          key: 'createTime',
           render: (h, params) => {
-            return h('span', this.formattime(new Date(params.row.time)))
+            return h('span', this.formattime(new Date(params.row.createTime)))
           }
         },
         {
@@ -322,7 +322,8 @@ export default {
         name: _this.projectForm.name,
         about: _this.projectForm.about,
         link: _this.projectForm.link,
-        cover: _this.projectForm.cover
+        cover: _this.projectForm.cover,
+        createTime: new Date()
       }).then(function (res) {
         _this.submitloading = false
         _this.projectModal = false
