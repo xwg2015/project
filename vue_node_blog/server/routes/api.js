@@ -1,4 +1,5 @@
 var express = require("express");
+var md5 = require("md5");
 var router = express.Router();
 var Article = require("../models/article");
 var User = require("../models/user");
@@ -140,7 +141,7 @@ router.post("/updateArticle", function (req, res, next) {
   });
 });
 
-// 删除项目
+// 删除文章
 router.post("/deleteArticle", function (req, res, next) {
   permission(req, res, next, function(userInfo) {
    var query = { _id: req.body.id };
@@ -257,7 +258,7 @@ router.post("/register", function (req, res, next) {
     }
     var user = new User({
       username: req.body.username,
-      password: req.body.password,
+      password: md5(req.body.password),
       role: role
     });
   
@@ -275,7 +276,7 @@ router.post("/register", function (req, res, next) {
 router.post("/login", function (req, res, next) {
    User.findOne({
     username: req.body.username,
-    password: req.body.password
+    password: md5(req.body.password)
   }).then(function(userInfo) {
     if (!userInfo) {
       responseData.code = 1;
