@@ -37,11 +37,12 @@ router.post("/upload", function(req, res, next){
   var form = new formidable.IncomingForm();
 
   form.encoding = "utf-8";
-  form.uploadDir = "/home/upload"
+  form.uploadDir = "/home/www/upload"
   form.keepExtensions = true;
 
   form.parse(req, function(err, fields, files) {
     if (err) throw err;
+    files.file.path = files.file.path.replace("/home/www", "");
     responseData.fields = fields;
     responseData.files = files;
     res.json(responseData);

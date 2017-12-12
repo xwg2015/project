@@ -35,6 +35,7 @@
     top 0
     justify-content center
     align-items center
+    background-color #fff
     img
       width 238px
       height 178px
