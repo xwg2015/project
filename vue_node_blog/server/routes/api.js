@@ -1,9 +1,13 @@
 var express = require("express");
 var md5 = require("md5");
-var router = express.Router();
+var path = require("path")
+var formidable = require('formidable');
+
 var Article = require("../models/article");
 var User = require("../models/user");
 var Project = require("../models/project");
+
+var router = express.Router();
  
 /**
  * 统一返回格式
@@ -23,6 +27,25 @@ router.use(function (req, res, next) {
     }
   };
   next();
+});
+
+/**
+ * 文件上传
+ * 前端iview上传组件控制文件大小限制
+ */
+router.post("/upload", function(req, res, next){  
+  var form = new formidable.IncomingForm();
+
+  form.encoding = "utf-8";
+  form.uploadDir = "/home/upload"
+  form.keepExtensions = true;
+
+  form.parse(req, function(err, fields, files) {
+    if (err) throw err;
+    responseData.fields = fields;
+    responseData.files = files;
+    res.json(responseData);
+  });
 });
 
 /**

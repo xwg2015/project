@@ -33,6 +33,10 @@ Vue.prototype.$golbal = {
 }
 
 Vue.$Message = Vue.prototype.$Message
+Vue.$Message.config({
+  top: 50,
+  duration: 2
+})
 
 /**
  * NOTE:

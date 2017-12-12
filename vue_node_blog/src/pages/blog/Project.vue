@@ -25,14 +25,9 @@
             <span slot="prepend">(http|https:)//</span>
           </Input>
         </FormItem>
-        <FormItem label="封面图">
-          <!-- <Upload
-            action="//jsonplaceholder.typicode.com/posts/">
-            <div style="padding: 20px 0">
-              <Icon type="ios-cloud-upload" size="52"></Icon>
-              <p>点击上传项目封面图</p>
-            </div>
-          </Upload> -->
+        <FormItem label="封面图" prop="cover">
+          <input v-model="projectForm.cover" type="hidden"></input>
+          <XUpload v-model="projectForm.cover"></XUpload>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -45,7 +40,10 @@
 <script>
 import axios from 'axios'
 import { datetime } from '../../lib/format-time'
+import XUpload from '../../components/Upload'
 export default {
+  name: 'project',
+  components: { XUpload },
   data () {
     return {
       permission: true,
@@ -193,7 +191,8 @@ export default {
       rules: {
         name: [{ required: true, min: 1, max: 15, message: '项目名称限1-15个字', trigger: 'blur' }],
         about: [{ required: true, min: 1, max: 50, message: '项目简介限1-50个字', trigger: 'blur' }],
-        link: [{ required: true, message: '请输入项目链接', trigger: 'blur' }]
+        link: [{ required: true, message: '请输入项目链接', trigger: 'blur' }],
+        cover: [{ required: true, message: '请上传封面图', trigger: 'blur' }]
       }
     }
   },
@@ -317,6 +316,7 @@ export default {
     // 提交请求
     axiosSubmit () {
       var _this = this
+      console.log(_this.projectForm.cover)
       axios.post(`${_this.$golbal.host}/${_this.projectForm.type}Project`, {
         id: _this.projectForm.id,
         name: _this.projectForm.name,
