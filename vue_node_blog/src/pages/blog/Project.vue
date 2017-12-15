@@ -38,8 +38,6 @@
 </template>
 
 <style lang="stylus">
-  .ivu-table-cell
-    line-height 0
 </style>
 
 <script>
@@ -111,7 +109,7 @@ export default {
         {
           title: '封面',
           key: 'cover',
-          width: 140,
+          width: 156,
           render: (h, params) => {
             return h(
               'img',
@@ -122,8 +120,7 @@ export default {
                 style: {
                   width: '120px',
                   height: '90px',
-                  marginTop: '6px',
-                  marginBottom: '6px'
+                  marginTop: '6px'
                 }
               }
             )
