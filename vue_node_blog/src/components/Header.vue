@@ -187,6 +187,7 @@
 
         if (_this.userForm.type === 'register') {
           data.code = _this.userForm.code
+          data.createTime = new Date()
         }
 
         _this.$refs[name].validate((valid) => {
