@@ -105,7 +105,17 @@ export default {
         },
         {
           title: '封面',
-          key: 'cover'
+          key: 'cover',
+          render: (h, params) => {
+            return h(
+              'img',
+              {
+                props: {
+                  src: params.row.cover
+                }
+              }
+            )
+          }
         },
         {
           title: '创建时间',
