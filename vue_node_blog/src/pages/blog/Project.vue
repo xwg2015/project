@@ -37,6 +37,11 @@
   </section>
 </template>
 
+<style lang="stylus">
+  .ivu-table-cell
+    line-height 0
+</style>
+
 <script>
 import axios from 'axios'
 import { datetime } from '../../lib/format-time'
@@ -106,6 +111,7 @@ export default {
         {
           title: '封面',
           key: 'cover',
+          width: 140,
           render: (h, params) => {
             return h(
               'img',
@@ -115,7 +121,9 @@ export default {
                 },
                 style: {
                   width: '120px',
-                  height: '90px'
+                  height: '90px',
+                  marginTop: '6px',
+                  marginBottom: '6px'
                 }
               }
             )
