@@ -110,8 +110,12 @@ export default {
             return h(
               'img',
               {
-                props: {
+                attrs: {
                   src: params.row.cover
+                },
+                style: {
+                  width: '120px',
+                  height: '90px'
                 }
               }
             )
