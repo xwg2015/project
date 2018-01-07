@@ -1,8 +1,8 @@
 {
-  "name": "nuxt_node_blog",
+  "name": "nuxt_blog",
   "version": "1.0.0",
   "description": "Nuxt.js project",
-  "author": "xiongwengang <xiongwengang@bilibili.com>",
+  "author": "xiongwengang <xwg2015@icloud.com>",
   "private": true,
   "scripts": {
     "dev": "nuxt",
@@ -13,7 +13,8 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
-    "nuxt": "^1.0.0-rc11"
+    "nuxt": "^1.0.0-rc11",
+    "vue-ripple-directive": "^2.0.1"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",

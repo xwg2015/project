@@ -267,15 +267,6 @@
   }
 }
 
-// 针对火狐浏览器打bug
-// @include firefox{.test{padding-bottom:3px;}}
-@mixin firefox {
-  @-moz-document url-prefix(){
-    @content;
-  }
-}
-
-
 // %
 // 只定义了%，所以只能通过@extend来调用
 //-----------------------------------------------------

@@ -3,7 +3,7 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: 'nuxt_node_blog',
+    title: 'nuxt_blog',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -33,13 +33,15 @@ module.exports = {
           exclude: /(node_modules)/
         })
       }
-    }
+    },
+    vendor: []
   },
-  // 引入sasscore
+  // css样式重置
   css: [
-    '~/assets/sassCore/_reset.scss'
+    '~/assets/sassCore/_reset.scss',
+    'swiper/dist/css/swiper.css'
   ],
-  // 加载各种laoder
+  // loader
   loaders: [
     {
       test: /\.scss$/,
@@ -52,5 +54,8 @@ module.exports = {
         limit: 1048576
       }
     }
+  ],
+  plugins: [
+    { src: '~/plugins/vue-ripple-directive', ssr: false }
   ]
 }

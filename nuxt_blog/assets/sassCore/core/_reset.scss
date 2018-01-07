@@ -10,9 +10,9 @@
 //-----------------------------------------------------
 
 @if $mobileSwitch {
-    * {
-        @include box-sizing(border-box); //xwg:移动端使用更方便布局
-    }
+  * {
+    @include box-sizing(border-box); //xwg:移动端使用更方便布局
+  }
 }
 
 /**
@@ -25,7 +25,7 @@
 html {
   font-family: $fontYaHei, sans-serif; /* 1 */ //xwg:PC端标准字体
   @if $mobileSwitch {
-      font-family: $baseFontFamily; //xwg:移动端标准字体
+    font-family: $baseFontFamily; //xwg:移动端标准字体
   }
   -ms-text-size-adjust: 100%; /* 2 */
   -webkit-text-size-adjust: 100%; /* 2 */
@@ -46,7 +46,7 @@ body {
   background-color: $bodyBgColor; /* 0 */
 
   @if $mobileSwitch {
-      -webkit-tap-highlight-color: transparent; //xwg:移动端去除点击效果颜色
+    -webkit-tap-highlight-color: transparent; //xwg:移动端去除点击效果颜色
   }
 }
 
@@ -134,10 +134,10 @@ a {
   /* 0 */
   text-decoration:none;
   @if length($linkColor) > 1{
-      color:nth($linkColor,1);
-      &:hover{
-        color:nth($linkColor,2);
-      }
+    color:nth($linkColor,1);
+    &:hover{
+      color:nth($linkColor,2);
+    }
   } @else {
     color:$linkColor;
     &:hover{
@@ -507,7 +507,6 @@ th {
 
 // 根据使用习惯，对normalize上进行补充
 //-----------------------------------------------------
-html,
 button,
 input,
 select,
@@ -559,23 +558,23 @@ ul,ol{
 @if $printStyleSwitch {
   @media print {
       * {
-          background: transparent !important;
-          color: #000 !important; // Black prints faster: h5bp.com/s
-          box-shadow: none !important;
-          text-shadow: none !important;
+        background: transparent !important;
+        color: #000 !important; // Black prints faster: h5bp.com/s
+        box-shadow: none !important;
+        text-shadow: none !important;
       }
 
       a,
       a:visited {
-          text-decoration: underline;
+        text-decoration: underline;
       }
 
       a[href]:after {
-          content: " (" attr(href) ")";
+        content: " (" attr(href) ")";
       }
 
       abbr[title]:after {
-          content: " (" attr(title) ")";
+        content: " (" attr(title) ")";
       }
 
       // Don't show links for images, or javascript/internal links
@@ -583,42 +582,42 @@ ul,ol{
       .ir a:after,
       a[href^="javascript:"]:after,
       a[href^="#"]:after {
-          content: "";
+        content: "";
       }
 
       pre,
       blockquote {
-          border: 1px solid #999;
-          page-break-inside: avoid;
+        border: 1px solid #999;
+        page-break-inside: avoid;
       }
 
       thead {
-          display: table-header-group; // h5bp.com/t
+        display: table-header-group; // h5bp.com/t
       }
 
       tr,
       img {
-          page-break-inside: avoid;
+        page-break-inside: avoid;
       }
 
       img {
-          max-width: 100% !important;
+        max-width: 100% !important;
       }
 
       @page {
-          margin: 0.5cm;
+        margin: 0.5cm;
       }
 
       p,
       h2,
       h3 {
-          orphans: 3;
-          widows: 3;
+        orphans: 3;
+        widows: 3;
       }
 
       h2,
       h3 {
-          page-break-after: avoid;
+        page-break-after: avoid;
       }
   }
 }
