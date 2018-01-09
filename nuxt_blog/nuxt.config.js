@@ -56,6 +56,7 @@ module.exports = {
     }
   ],
   plugins: [
-    { src: '~/plugins/vue-ripple-directive', ssr: false }
+    { src: '~/plugins/vue-ripple-directive', ssr: false },
+    { src: '~/plugins/event-bus', ssr: false }
   ]
 }

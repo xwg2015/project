@@ -1,7 +1,7 @@
 <template>
   <section class="page page-article-list">
     <VHeader :is-other="true"></VHeader>
-    <section class="main">
+    <section class="mod-layout-main main">
       <div class="tab">
         <h2 class="mod-shadow tab-item technical-item" :class="{ 'active': curTab === 'technical' }" @click="tabChange('technical')">技术</h2>
         <h2 class="mod-shadow tab-item journal-item" :class="{ 'active': curTab === 'journal' }" @click="tabChange('journal')">日志</h2>
@@ -15,7 +15,7 @@
                   <h3 class="title">Safari 支持 Service Worker了</h3>
                   <div class="about">
                     <p class="text">在之前的文章《PWA 将带来新一轮大前端技术洗牌？》中，我们回顾了 Web 在移动时代遭遇的两大枷锁，并就PWA是否能真正弥补 Web 劣势进行了分析，同时，提出“根据当前的发展趋势，PWA 将会带来 Web App 的大量需求…</p>
-                    <div class="img" style="background-image: url(../static/image/test.jpg)"></div>
+                    <div class="img" style="background-image: url(../../static/image/test.jpg)"></div>
                   </div>
                   <div class="tag-list">
                     <span class="tag-item">javascript</span>
@@ -29,7 +29,7 @@
                   <h3 class="title">Safari 支持 Service Worker了</h3>
                   <div class="about">
                     <p class="text">在之前的文章《PWA 将带来新一轮大前端技术洗牌？》中，我们回顾了 Web 在移动时代遭遇的两大枷锁，并就PWA是否能真正弥补 Web 劣势进行了分析，同时，提出“根据当前的发展趋势，PWA 将会带来 Web App 的大量需求…</p>
-                    <div class="img" style="background-image: url(../static/image/test.jpg)"></div>
+                    <div class="img" style="background-image: url(../../static/image/test.jpg)"></div>
                   </div>
                   <div class="tag-list">
                     <span class="tag-item">javascript</span>
@@ -47,7 +47,7 @@
                   <h3 class="title">Safari 支持 Service Worker了</h3>
                   <div class="about">
                     <p class="text">在之前的文章《PWA 将带来新一轮大前端技术洗牌？》中，我们回顾了 Web 在移动时代遭遇的两大枷锁，并就PWA是否能真正弥补 Web 劣势进行了分析，同时，提出“根据当前的发展趋势，PWA 将会带来 Web App 的大量需求…</p>
-                    <div class="img" style="background-image: url(../static/image/test.jpg)"></div>
+                    <div class="img" style="background-image: url(../../static/image/test.jpg)"></div>
                   </div>
                   <div class="tag-list">
                     <span class="tag-item">javascript</span>
@@ -94,8 +94,8 @@
 </template>
 
 <script>
-  import VHeader from '../components/Header'
-  import VFooter from '../components/Footer'
+  import VHeader from '../../components/Header'
+  import VFooter from '../../components/Footer'
   export default {
     name: 'ArticleList',
     components: {
@@ -132,11 +132,11 @@
 </script>
 
 <style lang="sass">
-  @import '../assets/sassCore/_function.scss'
+  @import '../../assets/sassCore/_function.scss'
 
   .page-article-list
     .main
-      width: $articlePageWidth
+      width: $mainWidth
       @include center-block()
     .tab
       @include display-flex()
@@ -154,13 +154,13 @@
       .technical-item.active, .journal-item.active
         color: $white
       .technical-item
-        background-image: url('../static/image/technical.png')
+        background-image: url('../../static/image/technical.png')
       .technical-item.active
-        background-image: url('../static/image/technical-active.png')
+        background-image: url('../../static/image/technical-active.png')
       .journal-item
-        background-image: url('../static/image/journal.png')
+        background-image: url('../../static/image/journal.png')
       .journal-item.active
-        background-image: url('../static/image/journal-active.png')
+        background-image: url('../../static/image/journal-active.png')
     .content
       @include display-flex()
       @include justify-content()
