@@ -20,71 +20,59 @@
   </section>
 </template>
 
-<style lang="scss">
-  @import '../assets/sassCore/_function.scss';
-
-  .mod-footer {
-    background-color: $mainWhite;
-    .contact {
-      @include display-flex();
-      @include justify-content();
-      @include align-items(center);
-      width: 200px;
-      height: 100px;
-      @include center-block();
-    }
-    .iconfont {
-      font-size: 30px;
-      color: $mainBlack;
-    }
-    .iconfont:hover {
-      color: lighten($mainBlack, 10%);
-      transition: 0.5s;
-    }
-    .weixin-wrap, .github-wrap {
-      position: relative;
-    }
-    .eyes {
-      @include display-flex();
-      position: absolute;
-      top: 18px;
-      left: 10px;
-      @include opacity(0);
-      transition: 1s;
-      span {
-        width: 4px;
-        height: 1px;
-        margin-right: 2px;
-        background-color: lighten($mainBlack, 10%);
-      }
-    }
-    .github-wrap:hover {
-      .eyes {
-        @include opacity(100);
-      }
-    }
-    .weixin-wrap:hover {
-      .qrcode {
-        @include opacity(100);
-        left: 40px;
-      }
-    }
-    .qrcode {
-      position: absolute;
-      left: 0;
-      top: -18px;
-      width: 80px;
-      max-width: 80px;
-      height: 80px;
-      @include opacity(0);
-      transition: 1s ease;
-    }
-    .copyright {
-      line-height:50px;
-      text-align: center;
-      color: $mainWhite;
-      background-color: $mainBlack;
-    }
-  }
+<style lang="sass">
+  @import '../assets/sassCore/_function.scss'
+  .mod-footer
+    background-color: $white
+    .contact
+      @include display-flex()
+      @include justify-content()
+      @include align-items(center)
+      width: 200px
+      height: 100px
+      @include center-block()
+    .iconfont
+      font-size: 30px
+      color: $themeColor
+    .iconfont:hover
+      color: lighten($themeColor, 10%)
+      transition: 0.5s
+    .weixin-wrap, .github-wrap
+      position: relative
+    .eyes
+      @include display-flex()
+      position: absolute
+      top: 18px
+      left: 10px
+      @include opacity(0)
+      transition: 1s
+      span
+        width: 4px
+        height: 1px
+        margin-right: 2px
+        background-color: lighten($themeColor, 10%)
+    .github-wrap:hover
+      .eyes
+        @include opacity(100)
+    .qrcode
+      position: absolute
+      left: 0
+      top: -18px
+      z-index: -1
+      width: 80px
+      max-width: 80px
+      height: 80px
+      @include opacity(100)
+      transition: 1s ease
+    .icon-weixin:hover
+      color: red
+    .icon-weixin:hover + .qrcode
+      @include opacity(100)
+      left: 40px
+    .copyright
+      line-height: 50px
+      text-align: center
+      color: $white
+      background-color: $themeColor
 </style>
 

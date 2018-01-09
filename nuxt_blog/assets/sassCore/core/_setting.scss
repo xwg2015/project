@@ -102,8 +102,10 @@ $zindexModal:           1100 !default;
 // xwg:以下样式根据设计稿重新定义
 //-----------------------------------------------------
 $minWidth: 1200px;
+$articlePageWidth: 990px;
 
-$mainBlack: #333;
-$mainWhite: #fff;
+$themeColor: #333;
+$maskBgColor: rgba($themeColor, 0.5);
 $bgColor: #f5f5f5;
-;
+$white: #fff;
+$boxShadowColor: rgba($themeColor, 0.2);
