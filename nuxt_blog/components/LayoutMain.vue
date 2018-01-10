@@ -42,8 +42,7 @@
     @include display-flex()
     @include justify-content()
     width: $mainWidth
-    @include center-block()
-    margin-bottom: 40px
+    margin: 30px auto
     .left
       position: relative
       width: 720px

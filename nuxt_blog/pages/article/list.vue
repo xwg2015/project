@@ -10,7 +10,7 @@
         <div class="tab-content technical-content" v-show="curTab === 'technical'">
           <ul class="article-list">
             <li class="mod-shadow article-item">
-              <h3 class="title"><a href="/2" target="_blank">Safari 支持 Service Worker了</a></h3>
+              <h3 class="title"><a href="/article/2" target="_blank">Safari 支持 Service Worker了</a></h3>
               <div class="about">
                 <p class="text">在之前的文章《PWA 将带来新一轮大前端技术洗牌？》中，我们回顾了 Web 在移动时代遭遇的两大枷锁，并就PWA是否能真正弥补 Web 劣势进行了分析，同时，提出“根据当前的发展趋势，PWA 将会带来 Web App 的大量需求…</p>
                 <div class="img" style="background-image: url(../../static/image/test.jpg)"></div>
@@ -18,7 +18,23 @@
               <Tags></Tags>
             </li>
             <li class="mod-shadow article-item">
-              <h3 class="title"><a href="/2" target="_blank">Safari 支持 Service Worker了</a></h3>
+              <h3 class="title"><a href="/article/2" target="_blank">Safari 支持 Service Worker了</a></h3>
+              <div class="about">
+                <p class="text">在之前的文章《PWA 将带来新一轮大前端技术洗牌？》中，我们回顾了 Web 在移动时代遭遇的两大枷锁，并就PWA是否能真正弥补 Web 劣势进行了分析，同时，提出“根据当前的发展趋势，PWA 将会带来 Web App 的大量需求…</p>
+                <div class="img" style="background-image: url(../../static/image/test.jpg)"></div>
+              </div>
+              <Tags></Tags>
+            </li>
+            <li class="mod-shadow article-item">
+              <h3 class="title"><a href="/article/2" target="_blank">Safari 支持 Service Worker了</a></h3>
+              <div class="about">
+                <p class="text">在之前的文章《PWA 将带来新一轮大前端技术洗牌？》中，我们回顾了 Web 在移动时代遭遇的两大枷锁，并就PWA是否能真正弥补 Web 劣势进行了分析，同时，提出“根据当前的发展趋势，PWA 将会带来 Web App 的大量需求…</p>
+                <div class="img" style="background-image: url(../../static/image/test.jpg)"></div>
+              </div>
+              <Tags></Tags>
+            </li>
+            <li class="mod-shadow article-item">
+              <h3 class="title"><a href="/article/2" target="_blank">Safari 支持 Service Worker了</a></h3>
               <div class="about">
                 <p class="text">在之前的文章《PWA 将带来新一轮大前端技术洗牌？》中，我们回顾了 Web 在移动时代遭遇的两大枷锁，并就PWA是否能真正弥补 Web 劣势进行了分析，同时，提出“根据当前的发展趋势，PWA 将会带来 Web App 的大量需求…</p>
                 <div class="img" style="background-image: url(../../static/image/test.jpg)"></div>
@@ -42,31 +58,22 @@
         <div class="mod-shadow loading">正在加载中...</div>
       </template>
       <template slot="right">
-        <div class="mod-shadow search">
-          <i class="iconfont icon-search"></i>
-          <input type="text" placeholder="搜索文章">
+        <div v-fixed>
+          <div class="mod-shadow search">
+            <i class="iconfont icon-search"></i>
+            <input type="text" placeholder="搜索文章">
+          </div>
+          <SideCard title="标签" row="multi" :data="list">
+            <template slot="tags" scope="props">
+              <dd>
+                <a :href="props.url" v-ripple>
+                  <h3>{{ props.tagName }}</h3>
+                  <span class="num">{{ props.num }}</span>
+                </a>
+              </dd>
+            </template>
+          </SideCard>
         </div>
-        <dl class="mod-shadow tag-list">
-          <dt>标签</dt>
-          <dd>
-            <a href="" v-ripple>
-              <span class="tag-name">javascript</span>
-              <span class="num">13</span>
-            </a>
-          </dd>
-          <dd>
-            <a href="" v-ripple>
-              <span class="tag-name">html</span>
-              <span class="num">8</span>
-            </a>
-          </dd>
-          <dd>
-            <a href="" v-ripple>
-              <span class="tag-name">css</span>
-              <span class="num">2</span>
-            </a>
-          </dd>
-        </dl>
       </template>
     </LayoutMain>
     <VFooter></VFooter>
@@ -78,6 +85,7 @@
   import VFooter from '../../components/Footer'
   import LayoutMain from '../../components/LayoutMain'
   import Tags from '../../components/Tags'
+  import SideCard from '../../components/SideCard'
 
   export default {
     name: 'ArticleList',
@@ -85,11 +93,29 @@
       VHeader,
       VFooter,
       LayoutMain,
-      Tags
+      Tags,
+      SideCard
     },
     data () {
       return {
-        curTab: 'technical'
+        curTab: 'technical',
+        list: [
+          {
+            name: 'javascript',
+            num: '21',
+            url: 'javascript'
+          },
+          {
+            name: 'css',
+            num: '8',
+            url: 'css'
+          },
+          {
+            name: 'html',
+            num: '2',
+            url: 'html'
+          }
+        ]
       }
     },
     methods: {
@@ -108,7 +134,7 @@
     .tab
       @include display-flex()
       width: $mainWidth
-      margin: 30px auto
+      margin: 30px auto 0
       .tab-item
         width: 495px
         height: 100px
@@ -130,9 +156,6 @@
       .journal-item.active
         background-image: url('../../static/image/journal-active.png')
     .left
-      .link
-        display: block
-        color: $themeColor
       .article-item
         width: 620px
         height: 184px
@@ -140,19 +163,22 @@
         margin-bottom: 20px
         background-color: $white
         border-radius: 2px
-      .article-item:hover
-        .title
-          color: $themeColor
       .title
         margin-bottom: 10px
         font-size: 20px
-        transtion: 1s
+        a
+          color: $themeColor
+          transtion: 1s
+      .title:hover
+        a
+          color: lighten($themeColor, 20%)
       .about
         @include display-flex()
         @include justify-content()
         margin-bottom: 10px
       .text
         width: 410px
+        text-align: justify
         line-height: 28px
         font-size: 14px
       .img
@@ -185,23 +211,5 @@
           margin-left: 20px
           margin-right: 10px
           margin-top: -2px
-          color: lighten($themeColor, 40%)
-      .tag-list
-        width: 240px
-        background-color: $white
-        border-radius: 2px
-        dt
-          padding: 0 20px
-          line-height: 60px
-          color: lighten($themeColor, 40%)
-        dd
-          line-height: 50px
-          border-top: 1px solid rgba($themeColor, 0.05)
-          a
-            @include display-flex()
-            @include justify-content()
-            padding: 0 20px
-            color: $themeColor
-        .num
           color: lighten($themeColor, 40%)
 </style>

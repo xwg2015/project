@@ -1,5 +1,5 @@
 <template>
-  <section :class="['mod-header', { 'other-header': isOther }]">
+  <section class="mod-header" :class="[{ 'other-header': isOther }]">
     <h1>熊文刚的博客</h1>
     <Logo class="logo"></Logo>
     <ul class="nav">
@@ -57,7 +57,7 @@
     background-color: $white
     .nav
       a
-        color: rgba($themeColor, 0.8)
+        color: lighten($themeColor, 40%)
       a:hover, a.active, .nuxt-link-active
         color: $themeColor
 </style>
