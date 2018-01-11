@@ -3,7 +3,7 @@
     <VHeader :is-other="true"></VHeader>
     <div class="tab">
       <h2 class="mod-shadow tab-item technical-item" :class="{ 'active': curTab === 'technical' }" @click="tabChange('technical')">技术</h2>
-      <h2 class="mod-shadow tab-item journal-item" :class="{ 'active': curTab === 'journal' }" @click="tabChange('journal')">日志</h2>
+      <h2 class="mod-shadow tab-item journal-item" :class="{ 'active': curTab === 'journal' }" @click="tabChange('journal')">! 技术</h2>
     </div>
     <LayoutMain>
       <template slot="left">
@@ -77,6 +77,7 @@
       </template>
     </LayoutMain>
     <VFooter></VFooter>
+    <BackTop :distance="80"></BackTop>
   </section>
 </template>
 
@@ -86,6 +87,7 @@
   import LayoutMain from '../../components/LayoutMain'
   import Tags from '../../components/Tags'
   import SideCard from '../../components/SideCard'
+  import BackTop from '../../components/BackTop'
 
   export default {
     name: 'ArticleList',
@@ -94,7 +96,8 @@
       VFooter,
       LayoutMain,
       Tags,
-      SideCard
+      SideCard,
+      BackTop
     },
     data () {
       return {
@@ -180,7 +183,6 @@
         width: 410px
         text-align: justify
         line-height: 28px
-        font-size: 14px
       .img
         width: 180px
         height: 108px
@@ -188,7 +190,7 @@
         background-size: cover
         background-color: $themeColor
       .loading
-        line-height: 60px
+        line-height: 50px
         text-align: center
         background-color: $white
     .right

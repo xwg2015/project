@@ -12,6 +12,11 @@
 <script>
   export default {
     name: 'BackTop',
+    props: {
+      distance: {
+        type: Number
+      }
+    },
     data () {
       return {
         isShow: false
@@ -19,12 +24,25 @@
     },
     mounted () {
       this.computeStyle()
+      this.computeShow(this.distance)
 
       window.onresize = () => {
         this.computeStyle()
       }
 
       window.onscroll = () => {
+        this.computeShow(this.distance)
+      }
+    },
+    methods: {
+      computeStyle () {
+        if (window.innerWidth < 1200) {
+          this.$refs.backTop.style.marginLeft = 255 + (1200 - window.innerWidth) / 2 + 'px'
+        } else {
+          this.$refs.backTop.style.marginLeft = '255px'
+        }
+      },
+      computeShow (distance) {
         let srcollTop = document.body.scrollTop || document.documentElement.scrollTop
         let clientHeight = window.innerHeight
         let scrollHeight = document.body.scrollHeight || document.documentElement.scrollHeight
@@ -36,18 +54,9 @@
         }
 
         if (srcollTop + clientHeight + 100 > scrollHeight) {
-          this.$refs.backTop.style.bottom = 110 + (srcollTop + clientHeight + 100 - scrollHeight) + 'px'
+          this.$refs.backTop.style.bottom = distance + (srcollTop + clientHeight + 100 - scrollHeight) + 'px'
         } else {
           this.$refs.backTop.style.bottom = '100px'
-        }
-      }
-    },
-    methods: {
-      computeStyle () {
-        if (window.innerWidth < 1200) {
-          this.$refs.backTop.style.marginLeft = 255 + (1200 - window.innerWidth) / 2 + 'px'
-        } else {
-          this.$refs.backTop.style.marginLeft = '255px'
         }
       },
       goTop () {

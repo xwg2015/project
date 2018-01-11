@@ -4,8 +4,8 @@
     <Logo class="logo"></Logo>
     <ul class="nav">
       <li><a href="/" ref="index" :class="{'active': !isOther}">主页</a></li>
-      <li><router-link to="/article/list" ref="article">文章</router-link></li>
-      <li><a href="" ref="/project/list">项目</a></li>
+      <li><a href="/article/list" ref="article">文章</a></li>
+      <li><a href="/project/list" ref="project">项目</a></li>
       <li><a href="">简历</a></li>
       <li><a href="http://xiongwengang.xyz/admin" target="_blank">传说后台</a></li>
     </ul>
@@ -24,7 +24,9 @@
       default: false
     },
     mounted () {
-      // this.$refs[location.pathname.split('/')[1]].className = 'active'
+      if (this.isOther) {
+        this.$refs[location.pathname.split('/')[1]].className = 'active'
+      }
     }
   }
 </script>
