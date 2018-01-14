@@ -156,6 +156,8 @@ router.post("/addArticle", function (req, res, next) {
       title: req.body.title,
       type: req.body.type,
       tags: req.body.tags,
+      cover: req.body.cover,
+      about: req.body.about,
       content: req.body.content,
       createTime: req.body.createTime
     });
@@ -177,6 +179,8 @@ router.post("/updateArticle", function (req, res, next) {
         title: req.body.title,
         type: req.body.type,
         tags: req.body.tags,
+        cover: req.body.cover,
+        about: req.body.about,
         content: req.body.content
       }
     };
