@@ -126,6 +126,28 @@ router.get("/getArticle", function (req, res, next) {
   });
 });
 
+router.get("/blog/getArticle", function (req, res, next) {
+  var query = { type: req.query.type };
+
+  Article.find(query, function(err, data) {
+    if (err) throw err;
+    responseData.total = data.length;
+
+    Article.find(query)
+    .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
+    .limit(Number(req.query.pageSize))
+    .sort({
+      isTop: -1,
+      _id: -1
+    })
+    .exec(function (err, data) {
+      if (err) throw err;
+      responseData.data = data;
+      res.json(responseData);
+    });
+  });
+});
+
 // 新建文章
 router.post("/addArticle", function (req, res, next) {
    permission(req, res, next, function(userInfo) {

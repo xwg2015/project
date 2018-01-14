@@ -26,7 +26,7 @@
           </Input>
         </FormItem>
         <FormItem label="封面图" prop="cover">
-          <input v-model="projectForm.cover" type="hidden"></input>
+          <input v-model="projectForm.cover" type="hidden">
           <XUpload v-model="projectForm.cover"></XUpload>
         </FormItem>
       </Form>

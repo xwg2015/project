@@ -32,6 +32,13 @@
           <Input v-model="curTag" size="small" class="tag-input" @keyup.enter.native="handleAddTag" placeholder="请输入标签名"></Input>
           <Button icon="ios-plus-empty" type="dashed" size="small" @click="handleAddTag">添加标签</Button>
         </FormItem>
+        <FormItem label="封面" prop="cover">
+          <input v-model="articleForm.cover" type="hidden">
+          <XUpload v-model="articleForm.cover"></XUpload>
+        </FormItem>
+        <FormItem label="简介" prop="about">
+          <Input v-model="articleForm.about" type="textarea" :rows="4" placeholder="请输入文章简介"></Input>
+        </FormItem>
         <FormItem label="内容" prop="content">
           <input type="hidden" v-model="articleForm.content">
           <mavon-editor v-model="articleForm.content" default_open="edit" />
@@ -52,7 +59,9 @@
 <script>
 import axios from 'axios'
 import { datetime } from '../../lib/format-time'
+import XUpload from '../../components/Upload'
 export default {
+  components: { XUpload },
   data () {
     const validateTags = (rule, value, callback) => {
       if (!value.length) {
@@ -70,6 +79,8 @@ export default {
         title: '',
         tab: '',
         tags: [],
+        cover: '',
+        about: '',
         content: ''
       },
       typeZh: {
@@ -208,6 +219,8 @@ export default {
       rules: {
         title: [{ required: true, min: 1, max: 15, message: '文章标题限1-25个字', trigger: 'blur' }],
         tags: [{ required: true, validator: validateTags, trigger: 'change' }],
+        cover: [{ required: true, message: '请上传封面图', trigger: 'blur' }],
+        about: [{ required: true, message: '请输入文章简介', trigger: 'blur' }],
         content: [{ required: true, message: '请输入文章内容', trigger: 'blur' }]
       }
     }
@@ -295,6 +308,8 @@ export default {
         title: '',
         tab: this.curTab,
         tags: [],
+        cover: '',
+        about: '',
         content: ''
       }
     },
@@ -307,6 +322,8 @@ export default {
         title: this.articleData[index].title,
         tab: this.articleData[index].type,
         tags: this.articleData[index].tags.split(','),
+        cover: this.articleData[index].cover,
+        about: this.articleData[index].about,
         content: this.articleData[index].content
       }
     },
@@ -318,6 +335,8 @@ export default {
         title: '',
         tab: '',
         tags: [],
+        cover: '',
+        about: '',
         content: ''
       }
     },
@@ -378,6 +397,8 @@ export default {
         title: _this.articleForm.title,
         type: _this.articleForm.tab,
         tags: _this.articleForm.tags.join(','),
+        cover: _this.articleForm.cover,
+        about: _this.articleForm.about,
         content: _this.articleForm.content,
         createTime: new Date()
       }).then(function (res) {

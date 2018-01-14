@@ -15,9 +15,11 @@ var Schema = mongoose.Schema;
 var articleSchema = new Schema({
     author: String,
     title: String,
+    about: String,
     content: String,
     type: String,
     tags: String,
+    cover: String,
     isTop: {
       type: Boolean,
       default: false
