@@ -36,7 +36,7 @@
 </script>
 
 <style lang="sass">
-  @import '../assets/sassCore/_function.scss'
+  @import '~assets/sassCore/_function.scss'
 
   .mod-layout-main
     @include display-flex()

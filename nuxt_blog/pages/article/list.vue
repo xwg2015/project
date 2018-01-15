@@ -7,55 +7,31 @@
     </div>
     <LayoutMain>
       <template slot="left">
-        <div class="tab-content technical-content" v-show="curTab === 'technical'">
+        <div class="tab-content technical-content" v-show="curTab === 'technical'" ref="tabContent">
           <ul class="article-list">
-            <li class="mod-shadow article-item">
-              <h3 class="title"><a href="/article/2" target="_blank">Safari 支持 Service Worker了</a></h3>
+            <li class="mod-shadow article-item" v-for="item in list" :key="item._id">
+              <h3 class="title"><a :href="`/article/${item._id}`" target="_blank">{{  item.title }}</a></h3>
               <div class="about">
-                <p class="text">在之前的文章《PWA 将带来新一轮大前端技术洗牌？》中，我们回顾了 Web 在移动时代遭遇的两大枷锁，并就PWA是否能真正弥补 Web 劣势进行了分析，同时，提出“根据当前的发展趋势，PWA 将会带来 Web App 的大量需求…</p>
-                <div class="img" style="background-image: url(../../static/image/test.jpg)"></div>
+                <p class="text">{{ item.about }}</p>
+                <div class="img" :style="`background-image: url(//xiongwengang.xyz${item.cover})`"></div>
               </div>
-              <Tags></Tags>
-            </li>
-            <li class="mod-shadow article-item">
-              <h3 class="title"><a href="/article/2" target="_blank">Safari 支持 Service Worker了</a></h3>
-              <div class="about">
-                <p class="text">在之前的文章《PWA 将带来新一轮大前端技术洗牌？》中，我们回顾了 Web 在移动时代遭遇的两大枷锁，并就PWA是否能真正弥补 Web 劣势进行了分析，同时，提出“根据当前的发展趋势，PWA 将会带来 Web App 的大量需求…</p>
-                <div class="img" style="background-image: url(../../static/image/test.jpg)"></div>
-              </div>
-              <Tags></Tags>
-            </li>
-            <li class="mod-shadow article-item">
-              <h3 class="title"><a href="/article/2" target="_blank">Safari 支持 Service Worker了</a></h3>
-              <div class="about">
-                <p class="text">在之前的文章《PWA 将带来新一轮大前端技术洗牌？》中，我们回顾了 Web 在移动时代遭遇的两大枷锁，并就PWA是否能真正弥补 Web 劣势进行了分析，同时，提出“根据当前的发展趋势，PWA 将会带来 Web App 的大量需求…</p>
-                <div class="img" style="background-image: url(../../static/image/test.jpg)"></div>
-              </div>
-              <Tags></Tags>
-            </li>
-            <li class="mod-shadow article-item">
-              <h3 class="title"><a href="/article/2" target="_blank">Safari 支持 Service Worker了</a></h3>
-              <div class="about">
-                <p class="text">在之前的文章《PWA 将带来新一轮大前端技术洗牌？》中，我们回顾了 Web 在移动时代遭遇的两大枷锁，并就PWA是否能真正弥补 Web 劣势进行了分析，同时，提出“根据当前的发展趋势，PWA 将会带来 Web App 的大量需求…</p>
-                <div class="img" style="background-image: url(../../static/image/test.jpg)"></div>
-              </div>
-              <Tags></Tags>
+              <Tags :tags="item.tags.split(',')"></Tags>
             </li>
           </ul>
         </div>
         <div class="tab-content journal-content" v-show="curTab === 'journal'">
           <ul class="article-list">
-            <li class="mod-shadow article-item">
-              <h3 class="title"><a href="/2" target="_blank">Safari 支持 Service Worker了</a></h3>
+            <li class="mod-shadow article-item" v-for="item in list" :key="item._id">
+              <h3 class="title"><a :href="`/article/${item._id}`" target="_blank">{{  item.title }}</a></h3>
               <div class="about">
-                <p class="text">在之前的文章《PWA 将带来新一轮大前端技术洗牌？》中，我们回顾了 Web 在移动时代遭遇的两大枷锁，并就PWA是否能真正弥补 Web 劣势进行了分析，同时，提出“根据当前的发展趋势，PWA 将会带来 Web App 的大量需求…</p>
-                <div class="img" style="background-image: url(../../static/image/test.jpg)"></div>
+                <p class="text">{{ item.about }}</p>
+                <div class="img" :style="`background-image: url(//xiongwengang.xyz${item.cover})`"></div>
               </div>
-              <Tags></Tags>
+              <Tags :tags="item.tags.split(',')"></Tags>
             </li>
           </ul>
         </div>
-        <div class="mod-shadow loading">正在加载中...</div>
+        <Loading :loading="loading" :hasMore="hasMore"></Loading>
       </template>
       <template slot="right">
         <div v-fixed>
@@ -63,7 +39,7 @@
             <i class="iconfont icon-search"></i>
             <input type="text" placeholder="搜索文章">
           </div>
-          <SideCard title="标签" row="multi" :data="list">
+          <SideCard title="标签" row="multi" :data="tagList">
             <template slot="tags" scope="props">
               <dd>
                 <a :href="props.url" v-ripple>
@@ -82,12 +58,14 @@
 </template>
 
 <script>
-  import VHeader from '../../components/Header'
-  import VFooter from '../../components/Footer'
-  import LayoutMain from '../../components/LayoutMain'
-  import Tags from '../../components/Tags'
-  import SideCard from '../../components/SideCard'
-  import BackTop from '../../components/BackTop'
+  import VHeader from '~/components/Header'
+  import VFooter from '~/components/Footer'
+  import LayoutMain from '~/components/LayoutMain'
+  import Tags from '~/components/Tags'
+  import SideCard from '~/components/SideCard'
+  import BackTop from '~/components/BackTop'
+  import Loading from '~/components/Loading'
+  import axios from 'axios'
 
   export default {
     name: 'ArticleList',
@@ -97,12 +75,23 @@
       LayoutMain,
       Tags,
       SideCard,
-      BackTop
+      BackTop,
+      Loading
+    },
+    asyncData ({ params, error }) {
+      return axios.get('http://xiongwengang.xyz/api/blog/getArticle?pageCurrent=1&pageSize=3&type=technical').then((res) => {
+        return { list: res.data.data }
+      }).catch((e) => {
+        error({ statusCode: 404, message: '接口请求报错！' })
+      })
     },
     data () {
       return {
+        curPage: 1,
         curTab: 'technical',
-        list: [
+        loading: false,
+        hasMore: true,
+        tagList: [
           {
             name: 'javascript',
             num: '21',
@@ -121,17 +110,47 @@
         ]
       }
     },
+    mounted () {
+      window.addEventListener('scroll', () => {
+        let srcollTop = document.body.scrollTop || document.documentElement.scrollTop
+        let clientHeight = window.innerHeight
+        let scrollHeight = document.body.scrollHeight || document.documentElement.scrollHeight
+        let page = this.curPage + 1
+        setTimeout(() => {
+          if (srcollTop + clientHeight === scrollHeight && this.hasMore) {
+            this.loading = true
+            axios.get(`http://xiongwengang.xyz/api/blog/getArticle?pageCurrent=${page}&pageSize=3&type=${this.curTab}`).then((res) => {
+              if (res.data.data.length > 0) {
+                this.hasMore = true
+                this.curPage = page
+                this.list = this.list.concat(res.data.data)
+              } else {
+                this.hasMore = false
+              }
+            })
+          }
+        }, 500)
+      }, false)
+    },
     methods: {
       tabChange (type) {
         this.curTab = type
         this.$bus.$emit('is-clicked', true)
+        axios.get(`http://xiongwengang.xyz/api/blog/getArticle?pageCurrent=1&pageSize=3&type=${this.curTab}`).then((res) => {
+          this.list = res.data.data
+          this.loading = false
+          this.hasMore = true
+          this.curPage = 1
+        })
+      },
+      handleMore () {
       }
     }
   }
 </script>
 
 <style lang="sass">
-  @import '../../assets/sassCore/_function.scss'
+  @import '~assets/sassCore/_function.scss'
 
   .page-article-list
     .tab
@@ -151,13 +170,13 @@
       .technical-item.active, .journal-item.active
         color: $white
       .technical-item
-        background-image: url('../../static/image/technical.png')
+        background-image: url('~static/image/technical.png')
       .technical-item.active
-        background-image: url('../../static/image/technical-active.png')
+        background-image: url('~static/image/technical-active.png')
       .journal-item
-        background-image: url('../../static/image/journal.png')
+        background-image: url('~static/image/journal.png')
       .journal-item.active
-        background-image: url('../../static/image/journal-active.png')
+        background-image: url('~static/image/journal-active.png')
     .left
       .article-item
         width: 620px
@@ -189,10 +208,6 @@
         background-position: center
         background-size: cover
         background-color: $themeColor
-      .loading
-        line-height: 50px
-        text-align: center
-        background-color: $white
     .right
       .search
         @include display-flex()

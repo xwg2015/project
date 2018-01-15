@@ -26,13 +26,13 @@
       this.computeStyle()
       this.computeShow(this.distance)
 
-      window.onresize = () => {
+      window.addEventListener('resize', () => {
         this.computeStyle()
-      }
+      }, false)
 
-      window.onscroll = () => {
+      window.addEventListener('scroll', () => {
         this.computeShow(this.distance)
-      }
+      }, false)
     },
     methods: {
       computeStyle () {
@@ -67,7 +67,7 @@
 </script>
 
 <style lang="sass">
-  @import '../assets/sassCore/_function.scss'
+  @import '~assets/sassCore/_function.scss'
 
   .back-top
     @include display-flex()

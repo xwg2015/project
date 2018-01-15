@@ -34,7 +34,7 @@ module.exports = {
         })
       }
     },
-    vendor: []
+    vendor: ['axios']
   },
   // css样式重置
   css: [
@@ -56,8 +56,8 @@ module.exports = {
     }
   ],
   plugins: [
-    { src: '~/plugins/vue-ripple-directive', ssr: false },
-    { src: '~/plugins/vue-fixed-directive', ssr: false },
-    { src: '~/plugins/event-bus', ssr: false }
+    { src: '~plugins/vue-ripple-directive', ssr: false },
+    { src: '~plugins/vue-fixed-directive', ssr: false },
+    { src: '~plugins/event-bus', ssr: false }
   ]
 }

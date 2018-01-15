@@ -9,7 +9,7 @@
           <li class="card">
             <a href="" class="card-link">
               <div class="img-wrap">
-                <img src="../static/image/test.jpg" alt="">
+                <img src="~static/image/test.jpg" alt="">
               </div>
               <h3>数万个应用节点全息监控，ARMS新上线的应用监控神器到底有多牛？</h3>
             </a>
@@ -17,7 +17,7 @@
           <li class="card">
             <a href="" class="card-link">
               <div class="img-wrap">
-                <img src="../static/image/test.jpg" alt="">
+                <img src="~static/image/test.jpg" alt="">
               </div>
               <h3>数万个应用节点全息监控，ARMS新上线的应用监控神器到底有多牛？</h3>
             </a>
@@ -25,7 +25,7 @@
           <li class="card">
             <a href="" class="card-link">
               <div class="img-wrap">
-                <img src="../static/image/test.jpg" alt="">
+                <img src="~static/image/test.jpg" alt="">
               </div>
               <h3>数万个应用节点全息监控，ARMS新上线的应用监控神器到底有多牛？</h3>
             </a>
@@ -33,7 +33,7 @@
           <li class="card">
             <a href="" class="card-link">
               <div class="img-wrap">
-                <img src="../static/image/test.jpg" alt="">
+                <img src="~static/image/test.jpg" alt="">
               </div>
               <h3>数万个应用节点全息监控，ARMS新上线的应用监控神器到底有多牛？</h3>
             </a>
@@ -41,7 +41,7 @@
           <li class="card">
             <a href="" class="card-link">
               <div class="img-wrap">
-                <img src="../static/image/test.jpg" alt="">
+                <img src="~static/image/test.jpg" alt="">
               </div>
               <h3>数万个应用节点全息监控，ARMS新上线的应用监控神器到底有多牛？</h3>
             </a>
@@ -49,7 +49,7 @@
           <li class="card">
             <a href="" class="card-link">
               <div class="img-wrap">
-                <img src="../static/image/test.jpg" alt="">
+                <img src="~static/image/test.jpg" alt="">
               </div>
               <h3>数万个应用节点全息监控，ARMS新上线的应用监控神器到底有多牛？</h3>
             </a>
@@ -62,37 +62,37 @@
         <ul class="card-list">
           <li class="card">
             <a href="" class="card-link">
-              <img src="../static/image/test.jpg" alt="">
+              <img src="~static/image/test.jpg" alt="">
               <h3>数万个应用节点</h3>
             </a>
           </li>
           <li class="card">
             <a href="" class="card-link">
-              <img src="../static/image/test.jpg" alt="">
+              <img src="~static/image/test.jpg" alt="">
               <h3>数万个应用节点</h3>
             </a>
           </li>
           <li class="card">
             <a href="" class="card-link">
-              <img src="../static/image/test.jpg" alt="">
+              <img src="~static/image/test.jpg" alt="">
               <h3>数万个应用节点</h3>
             </a>
           </li>
           <li class="card">
             <a href="" class="card-link">
-              <img src="../static/image/test.jpg" alt="">
+              <img src="~static/image/test.jpg" alt="">
               <h3>数万个应用节点</h3>
             </a>
           </li>
           <li class="card">
             <a href="" class="card-link">
-              <img src="../static/image/test.jpg" alt="">
+              <img src="~static/image/test.jpg" alt="">
               <h3>数万个应用节点</h3>
             </a>
           </li>
           <li class="card">
             <a href="" class="card-link">
-              <img src="../static/image/test.jpg" alt="">
+              <img src="~static/image/test.jpg" alt="">
               <h3>数万个应用节点</h3>
             </a>
           </li>
@@ -105,9 +105,9 @@
 </template>
 
 <script>
-  import VHeader from '../components/Header'
-  import Intro from '../components/Intro'
-  import VFooter from '../components/Footer'
+  import VHeader from '~/components/Header'
+  import Intro from '~/components/Intro'
+  import VFooter from '~/components/Footer'
 
   export default {
     components: {
@@ -129,7 +129,7 @@
 </script>
 
 <style lang="sass">
-  @import '../assets/sassCore/_function.scss'
+  @import '~assets/sassCore/_function.scss'
   .main
     width: $minWidth
     @include center-block()

@@ -1,6 +1,6 @@
 <template>
   <section class="mod-intro">
-    <img src="../static/image/index-bg.png" alt="bg">
+    <img src="~static/image/index-bg.png" alt="bg">
     <div class="title">Hello, I'm Xiong Wengang!</div>
     <!-- <div class="scorpio">
       <svg version="1.1" id="Vrstva_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="368px" height="295px"
@@ -12,16 +12,16 @@
       </svg>
     </div> -->
     <div class="boy" ref="boy">
-      <img src="../static/image/boy.png" alt="boy">
+      <img src="~static/image/boy.png" alt="boy">
       <div class="tag tag-me"></div>
       <div class="tag tag-lol"></div>
       <div class="tag tag-pokemon"></div>
     </div>
     <div class="cat tag tag-mimi" ref="cat">
-      <img src="../static/image/cat.png" alt="cat">
+      <img src="~static/image/cat.png" alt="cat">
     </div>
     <div class="girl tag tag-soulmate" ref="girl">
-      <img src="../static/image/girl.png" alt="girl">
+      <img src="~static/image/girl.png" alt="girl">
     </div>
 
     <section class="mod-popover">
@@ -35,11 +35,11 @@
     name: 'Intro',
     mounted () {
       this.setImageSize()
-      window.onresize = () => {
+      window.addEventListener('resize', () => {
         if (window.innerWidth > 1200) {
           this.setImageSize()
         }
-      }
+      }, false)
     },
     methods: {
       setImageSize () {
@@ -55,7 +55,8 @@
 </script>
 
 <style lang="sass">
-  @import '../assets/sassCore/_function.scss'
+  @import '~assets/sassCore/_function.scss'
+
   .mod-intro
     position: relative
     margin-top: -80px

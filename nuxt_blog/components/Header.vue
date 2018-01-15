@@ -32,7 +32,8 @@
 </script>
 
 <style lang="sass">
-  @import '../assets/sassCore/_function.scss'
+  @import '~assets/sassCore/_function.scss'
+
   .mod-header
     @include display-flex()
     @include justify-content(center)

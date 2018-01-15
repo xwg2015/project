@@ -4,65 +4,73 @@
     <section class="main">
       <div class="mod-shadow bg"></div>
       <ul class="list">
-        <li class="mod-shadow item">
-          <div class="img-wrap"></div>
+        <li class="mod-shadow item" v-for="(item, index) in list" :key="index">
+          <div class="img-wrap" :style="`background-image: url(//xiongwengang.xyz${item.cover})`"></div>
           <div class="info">
-            <h2 class="title">XXX项目</h2>
-            <p class="about">项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介</p>
+            <h2 class="title">{{ item.name }}</h2>
+            <p class="about" v-html="item.about.replace(/[\r\n]/g, '<br />')"></p>
             <div class="links">
-              <a href="">源码地址</a>
-              <a href="">在线预览</a>
-            </div>
-          </div>
-        </li>
-        <li class="mod-shadow item">
-          <div class="img-wrap"></div>
-          <div class="info">
-            <h2 class="title">XXX项目</h2>
-            <p class="about">项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介</p>
-            <div class="links">
-              <a href="">源码地址</a>
-              <a href="">在线预览</a>
-            </div>
-          </div>
-        </li>
-        <li class="mod-shadow item">
-          <div class="img-wrap"></div>
-          <div class="info">
-            <h2 class="title">XXX项目</h2>
-            <p class="about">项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介项目简介</p>
-            <div class="links">
-              <a href="">源码地址</a>
-              <a href="">在线预览</a>
+              <a href="https://github.com/JustLikeU/project" target="_blank">源码地址</a>
+              <a :href="item.link" target="_blank">在线预览</a>
             </div>
           </div>
         </li>
       </ul>
+      <Loading :loading="loading" :hasMore="hasMore"></Loading>
     </section>
     <VFooter></VFooter>
   </section>
 </template>
 
 <script>
-  import VHeader from '../../components/Header'
-  import VFooter from '../../components/Footer'
+  import VHeader from '~/components/Header'
+  import VFooter from '~/components/Footer'
+  import Loading from '~/components/Loading'
+  import axios from 'axios'
 
   export default {
     components: {
       VHeader,
-      VFooter
+      VFooter,
+      Loading
+    },
+    asyncData ({ params, error }) {
+      return axios.get('http://xiongwengang.xyz/api/blog/getProject?pageCurrent=1&pageSize=3').then((res) => {
+        return { list: res.data.data }
+      }).catch((e) => {
+        error({ statusCode: 404, message: '接口请求报错！' })
+      })
     },
     data () {
       return {
-        list: [
-          {
-            title: ''
-          }
-        ]
+        curPage: 1,
+        pageSize: 3,
+        loading: false,
+        hasMore: true
       }
     },
     mounted () {
       this.computeStyle()
+      window.addEventListener('scroll', () => {
+        let srcollTop = document.body.scrollTop || document.documentElement.scrollTop
+        let clientHeight = window.innerHeight
+        let scrollHeight = document.body.scrollHeight || document.documentElement.scrollHeight
+        let page = this.curPage + 1
+        setTimeout(() => {
+          if (srcollTop + clientHeight === scrollHeight && this.hasMore) {
+            this.loading = true
+            axios.get(`http://xiongwengang.xyz/api/blog/getProject?pageCurrent=${page}&pageSize=${this.pageSize}`).then((res) => {
+              if (res.data.data.length > 0) {
+                this.hasMore = true
+                this.curPage = page
+                this.list = this.list.concat(res.data.data)
+              } else {
+                this.hasMore = false
+              }
+            })
+          }
+        }, 500)
+      }, false)
     },
     methods: {
       computeStyle () {
@@ -76,7 +84,7 @@
 </script>
 
 <style lang="sass">
-  @import '../../assets/sassCore/_function.scss'
+  @import '~assets/sassCore/_function.scss'
 
   .page-project
     .main
@@ -86,11 +94,12 @@
     .bg
       height: 240px
       margin: 50px 0
-      background-image: url(../../static/image/project-bg.png)
+      background-image: url(~static/image/project-bg.png)
       background-size: cover
       background-position: top center
     .item
       @include display-flex()
+      @include justify-content()
       position: relative
       padding: 30px 50px
       margin-bottom: 20px
@@ -101,13 +110,12 @@
     .img-wrap
       width: 270px
       height: 180px
-      margin-right: 30px
-      background-image: url(../../static/image/test.jpg)
-      background-size: cover
+      background-image: url(~static/image/test.jpg)
+      background-size: 100%
       background-position: center
     .info
       position: relative
-      width: 690px
+      width: 590px
     .title
       font-size: 20px
       margin-bottom: 10px

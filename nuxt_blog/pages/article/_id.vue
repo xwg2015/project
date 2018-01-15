@@ -36,12 +36,12 @@
 </template>
 
 <script>
-  import VHeader from '../../components/Header'
-  import VFooter from '../../components/Footer'
-  import LayoutMain from '../../components/LayoutMain'
-  import Tags from '../../components/Tags'
-  import SideCard from '../../components/SideCard'
-  import BackTop from '../../components/BackTop'
+  import VHeader from '~/components/Header'
+  import VFooter from '~/components/Footer'
+  import LayoutMain from '~/components/LayoutMain'
+  import Tags from '~/components/Tags'
+  import SideCard from '~/components/SideCard'
+  import BackTop from '~/components/BackTop'
 
   export default {
     name: 'ArticleList',
@@ -116,7 +116,7 @@
 </script>
 
 <style lang="sass">
-  @import '../../assets/sassCore/_function.scss'
+  @import '~assets/sassCore/_function.scss'
 
   .page-article-detail
     .article
@@ -127,7 +127,7 @@
       padding: 50px
     .cover
       height: 216px
-      background-image: url(../../static/image/test.jpg)
+      background-image: url(~static/image/test.jpg)
       background-position: center
       background-size: cover
       border-radius: 2px 2px 0 0

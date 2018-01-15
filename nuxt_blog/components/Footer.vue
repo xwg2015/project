@@ -11,7 +11,7 @@
       <a href="mailto:xwg2015@eicloud.com"><i class="iconfont icon-email"></i></a>
       <span class="weixin-wrap">
         <i class="iconfont icon-weixin"></i>
-        <img class="qrcode" src="../static/image/weixin.png" alt="我的微信">
+        <img class="qrcode" src="~static/image/weixin.png" alt="我的微信">
       </span>
     </div>
     <div class="copyright">
@@ -21,7 +21,7 @@
 </template>
 
 <style lang="sass">
-  @import '../assets/sassCore/_function.scss'
+  @import '~assets/sassCore/_function.scss'
   .mod-footer
     background-color: $white
     .contact

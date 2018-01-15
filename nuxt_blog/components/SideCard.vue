@@ -41,7 +41,7 @@
 </script>
 
 <style lang="sass">
-  @import '../assets/sassCore/_function.scss'
+  @import '~assets/sassCore/_function.scss'
 
   .mod-side-card
     width: 240px
