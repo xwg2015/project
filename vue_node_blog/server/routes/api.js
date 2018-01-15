@@ -394,9 +394,9 @@ router.get("/getProject", function (req, res, next) {
     var query;
 
     if (userInfo && userInfo.role === 3) {
-      query = { type: req.query.type }
+      query = { }
     } else if (userInfo && userInfo.role === 2) {
-      query = { type: req.query.type, author: userInfo.username }
+      query = { author: userInfo.username }
     }
 
     Project.find(query, function(err, data) {
@@ -418,7 +418,7 @@ router.get("/getProject", function (req, res, next) {
 });
 
 router.get("/blog/getProject", function (req, res, next) {
-  var query = { type: req.query.type }
+  var query = { }
 
   Project.find(query, function(err, data) {
     if (err) throw err;

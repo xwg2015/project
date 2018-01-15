@@ -23,7 +23,7 @@
         </FormItem>
         <FormItem label="类型">
           <Select v-model="articleForm.tab" style="width:100px">
-            <Option value="article">技术文章</Option>
+            <Option value="technical">技术文章</Option>
             <Option value="journal">日志</Option>
           </Select>
         </FormItem>
