@@ -5,11 +5,11 @@
       <Button type="primary" @click="handleAddArcticle" :disabled="permission">新建文章</Button>
     </header>
     <Tabs v-model="curTab" @on-click="handleChangeTab">
-      <TabPane label="技术文章" name="article">
-        <Table border :row-class-name="rowClassName" :columns="articleColumns" :loading="loading" :data="articleData"></Table>
+      <TabPane label="技术文章" name="technical">
+        <Table border :row-class-name="rowClassName" :columns="technicalColumns" :loading="loading" :data="technicalData"></Table>
       </TabPane>
       <TabPane label="日志" name="journal">
-        <Table border :row-class-name="rowClassName" :columns="articleColumns" :loading="loading" :data="articleData"></Table>
+        <Table border :row-class-name="rowClassName" :columns="technicalColumns" :loading="loading" :data="technicalData"></Table>
       </TabPane>
     </Tabs>
     <Page :total="page.total" :current="page.current" :page-size="page.size" class-name="mod-pagination" show-total @on-change="handleChangePage"></Page>
@@ -94,11 +94,11 @@ export default {
         total: 0
       },
       curTag: '',
-      curTab: 'article',
+      curTab: 'technical',
       loading: false,
       submitloading: false,
-      articleData: [],
-      articleColumns: [
+      technicalData: [],
+      technicalColumns: [
         {
           type: 'index',
           width: 60,
@@ -233,7 +233,7 @@ export default {
   methods: {
     // 隐藏项目行样式
     rowClassName (row, index) {
-      if (!this.articleData[index].isShow) {
+      if (!this.technicalData[index].isShow) {
         return 'table-hide-row'
       } else {
         return ''
@@ -241,11 +241,11 @@ export default {
     },
     // 置顶按钮文案
     topText (index) {
-      return this.articleData[index].isTop ? '取消置顶' : '置顶'
+      return this.technicalData[index].isTop ? '取消置顶' : '置顶'
     },
     // 隐藏按钮文案
     hideText (index) {
-      return this.articleData[index].isShow ? '隐藏' : '取消隐藏'
+      return this.technicalData[index].isShow ? '隐藏' : '取消隐藏'
     },
     // 时间格式化
     formattime (time) {
@@ -266,11 +266,11 @@ export default {
       let _this = this
       let text
       axios.post(`${this.$golbal.host}/topArticle`, {
-        id: _this.articleData[index]._id,
-        isTop: !_this.articleData[index].isTop
+        id: _this.technicalData[index]._id,
+        isTop: !_this.technicalData[index].isTop
       }).then(function (res) {
         if (res.data.code === 0) {
-          text = _this.articleData[index].isTop ? '取消置顶' : '置顶'
+          text = _this.technicalData[index].isTop ? '取消置顶' : '置顶'
           _this.$Message.success(`${text}成功！`)
           _this.getData(1, _this.curTab)
         } else {
@@ -285,11 +285,11 @@ export default {
       let _this = this
       let text
       axios.post(`${this.$golbal.host}/hideArticle`, {
-        id: _this.articleData[index]._id,
-        isShow: !_this.articleData[index].isShow
+        id: _this.technicalData[index]._id,
+        isShow: !_this.technicalData[index].isShow
       }).then(function (res) {
         if (res.status === 200) {
-          text = _this.articleData[index].isShow ? '隐藏' : '取消隐藏'
+          text = _this.technicalData[index].isShow ? '隐藏' : '取消隐藏'
           _this.$Message.success(`${text}成功！该操作只会影响前台页面的展示而已。`)
           _this.getData(1, _this.curTab)
         } else {
@@ -317,20 +317,20 @@ export default {
     handleEditArcticle (index) {
       this.articleModal = true
       this.articleForm = {
-        id: this.articleData[index]._id,
+        id: this.technicalData[index]._id,
         type: 'update',
-        title: this.articleData[index].title,
-        tab: this.articleData[index].type,
-        tags: this.articleData[index].tags.split(','),
-        cover: this.articleData[index].cover,
-        about: this.articleData[index].about,
-        content: this.articleData[index].content
+        title: this.technicalData[index].title,
+        tab: this.technicalData[index].type,
+        tags: this.technicalData[index].tags.split(','),
+        cover: this.technicalData[index].cover,
+        about: this.technicalData[index].about,
+        content: this.technicalData[index].content
       }
     },
     // 删除文章
     handleDeleteArticle (index) {
       this.articleForm = {
-        id: this.articleData[index]._id,
+        id: this.technicalData[index]._id,
         type: 'delete',
         title: '',
         tab: '',
@@ -354,7 +354,7 @@ export default {
         _this.loading = false
         if (res.data.code === 0) {
           _this.permission = false
-          _this.articleData = res.data.data
+          _this.technicalData = res.data.data
           _this.page.total = res.data.total
         } else {
           _this.$Message.error(res.data.msg)

@@ -417,6 +417,26 @@ router.get("/getProject", function (req, res, next) {
   });
 });
 
+router.get("/blog/getProject", function (req, res, next) {
+  var query = { type: req.query.type }
+
+  Project.find(query, function(err, data) {
+    if (err) throw err;
+    responseData.total = data.length;
+    Project.find(query)
+    .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
+    .limit(Number(req.query.pageSize))
+    .sort({
+      _id: -1
+    })
+    .exec(function (err, data) {
+      if (err) throw err;
+      responseData.data = data;
+      res.json(responseData);
+    });
+  });
+});
+
 // 新建项目
 router.post("/addProject", function (req, res, next) {
   permission(req, res, next, function(userInfo) {
@@ -469,7 +489,7 @@ router.post("/deleteProject", function (req, res, next) {
  });
 });
 
-// 前台页面隐藏文章、显示文章
+// 前台页面隐藏项目、显示项目
 router.post("/hideProject", function (req, res, next) {
   permission(req, res, next, function(userInfo) {
    var query = { _id: req.body.id };

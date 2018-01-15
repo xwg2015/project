@@ -293,7 +293,7 @@ export default {
     getData (current) {
       this.loading = true
       let _this = this
-      axios.get(`${_this.$golbal.host}/getProject`, {
+      axios.get(`${_this.$golbal.host}/blog/getProject`, {
         params: {
           pageCurrent: current,
           pageSize: _this.page.size
