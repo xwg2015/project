@@ -483,18 +483,18 @@ router.get("/blog/getIndex", function (req, res, next) {
   .exec(function (err, data) {
     if (err) throw err;
     responseData.articleData = data;
-  });
 
-  Project.find(query)
-  .limit(6)
-  .sort({
-    isTop: -1,
-    _id: -1
-  })
-  .exec(function (err, data) {
-    if (err) throw err;
-    responseData.projectData = data;
-    res.json(responseData);
+    Project.find(query)
+    .limit(6)
+    .sort({
+      isTop: -1,
+      _id: -1
+    })
+    .exec(function (err, data) {
+      if (err) throw err;
+      responseData.projectData = data;
+      res.json(responseData);
+    });
   });
 });
 
