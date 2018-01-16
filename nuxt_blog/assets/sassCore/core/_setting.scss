@@ -9,7 +9,7 @@
 $lte7:                  true !default; //是否兼容ie6-7
 $filter:                false !default; //是否为ie6-8开启css3滤镜兼容，常用于渐变背景
 $printStyleSwitch:      false !default; //是否开启打印样式
-$mobileSwitch:          false !default; //xwg:移动端特有的部分样式
+$mobileSwitch:          true !default; //xwg:移动端特有的部分样式
 
 
 // font相关
@@ -102,7 +102,15 @@ $zindexModal:           1100 !default;
 // xwg:以下样式根据设计稿重新定义
 //-----------------------------------------------------
 $minWidth: 1200px;
-$mainWidth: 990px;
+$baseWidth: 1024px;
+$baseHeight: 100px;
+$baseGap: 24px;
+$baseRadius: 2px;
+$baseTransition: 1s;
+$baseImgWidth: 30px;
+$baseImgHeight: 20px;
+$titleFontSize: 20px;
+$articleFontSize: 16px;
 
 $themeColor: #333;
 $maskBgColor: rgba($themeColor, 0.5);

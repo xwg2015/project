@@ -1,6 +1,6 @@
 <template>
   <div class="mod-logo">
-    <canvas id="logo" width="85" height="25"></canvas>
+    <canvas id="logo" width="170" height="50" style="width: 85px; height: 25px;"></canvas>
   </div>
 </template>
 
@@ -55,8 +55,8 @@
     },
     mounted () {
       this.drawReact(this.x, 0)
-      this.drawReact(this.w, 30)
-      this.drawReact(this.g, 60)
+      this.drawReact(this.w, 60)
+      this.drawReact(this.g, 120)
       requestAnimationFrame(this.init)
     },
     methods: {
@@ -64,8 +64,8 @@
         let progressTime = timestamp - this.lastTime
         if (progressTime > 500) {
           this.drawReact(this.x, 0)
-          this.drawReact(this.w, 30)
-          this.drawReact(this.g, 60)
+          this.drawReact(this.w, 60)
+          this.drawReact(this.g, 120)
           this.lastTime = timestamp
         }
         requestAnimationFrame(this.init)
@@ -77,7 +77,7 @@
           for (let j = 0; j < ele[i].length; j++) {
             if (ele[i][j]) {
               ctx.fillStyle = this.colorList[Math.floor(Math.random() * this.colorList.length)]
-              ctx.fillRect(5 * j + space, 5 * i, 4, 4)
+              ctx.fillRect(10 * j + space, 10 * i, 8, 8)
             }
           }
         }

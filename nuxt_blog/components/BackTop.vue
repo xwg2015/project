@@ -37,9 +37,9 @@
     methods: {
       computeStyle () {
         if (window.innerWidth < 1200) {
-          this.$refs.backTop.style.marginLeft = 255 + (1200 - window.innerWidth) / 2 + 'px'
+          this.$refs.backTop.style.marginLeft = 262 + (1200 - window.innerWidth) / 2 + 'px'
         } else {
-          this.$refs.backTop.style.marginLeft = '255px'
+          this.$refs.backTop.style.marginLeft = '262px'
         }
       },
       computeShow (distance) {
@@ -75,12 +75,12 @@
     @include align-items()
     position: fixed
     left: 50%
-    bottom: 100px
-    width: 50px
-    height: 50px
-    margin-left: 255px
+    bottom: $baseHeight
+    width: $baseHeight * 0.5
+    height: $baseHeight * 0.5
+    margin-left: 262px
     background-color: $white
-    border-radius: 2px
+    border-radius: $baseRadius
     z-index: 10
     cursor: pointer
     &:hover

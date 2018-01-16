@@ -19,12 +19,12 @@
   .mod-tags
     @include display-flex()
     .item
-      padding: 0 12px
-      margin-right: 10px
-      line-height: 24px
-      font-size: 14px
+      padding: 0 $baseGap / 2
+      margin-right: $baseGap / 2
+      line-height: $baseFontSize * 2
+      font-size: $baseFontSize
       font-weight: normal
       color: $white
       background: lighten($themeColor, 20%)
-      border-radius: 2px
+      border-radius: $baseRadius
 </style>

@@ -88,50 +88,50 @@
 
   .page-project
     .main
-      width: $mainWidth
-      margin-bottom: 50px
+      width: $baseWidth
+      margin-bottom: $baseGap * 1.5
       @include center-block()
     .bg
-      height: 240px
-      margin: 50px 0
+      height: $baseHeight * 2
+      margin: $baseGap 0
       background-image: url(~static/image/project-bg.png)
       background-size: cover
       background-position: top center
     .item
-      @include display-flex()
-      @include justify-content()
       position: relative
-      padding: 30px 50px
-      margin-bottom: 20px
+      padding: $baseGap $baseGap * 1.5
+      margin-bottom: $baseGap
       background-color: $white
-      border-radius: 2px
-      @include animation(itemMove 1s ease)
+      border-radius: $baseRadius
+      @include animation(itemMove $baseTransition ease)
       @include animation-fill-mode(forwards)
     .img-wrap
-      width: 270px
-      height: 180px
-      background-image: url(~static/image/test.jpg)
+      width: $baseImgWidth * 9
+      height: $baseImgHeight * 9
       background-size: 100%
       background-position: center
+      border-radius: $baseRadius
     .info
       position: relative
-      width: 590px
+      min-height: $baseImgHeight * 9
+      margin-left: $baseImgWidth * 9 + $baseGap * 1.5
+      margin-top: -$baseImgHeight * 9
     .title
-      font-size: 20px
-      margin-bottom: 10px
+      font-size: $titleFontSize
+      margin-bottom: $baseGap / 2
     .about
       text-align: justify
-      line-height: 28px
-      font-size: 14px
+      line-height: $baseFontSize * 2
+      @include ellipsis(4)
     .links
       position: absolute
       bottom: 0
       right: 0
       a
-        margin-left: 20px
-        font-size: 16px
+        margin-left: $baseGap
+        font-size: $baseFontSize
         color: $themeColor
-        transtion: 1s
+        transtion: $baseTransition
         &:hover
           color: lighten($themeColor, 20%)
     @include keyframes (itemMove)

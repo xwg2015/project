@@ -28,15 +28,15 @@
       @include display-flex()
       @include justify-content()
       @include align-items(center)
-      width: 200px
-      height: 100px
+      width: $baseHeight * 2
+      height: $baseHeight
       @include center-block()
     .iconfont
       font-size: 30px
       color: $themeColor
     .iconfont:hover
       color: lighten($themeColor, 10%)
-      transition: 0.5s
+      transition: $baseTransition / 2
     .weixin-wrap, .github-wrap
       position: relative
     .eyes
@@ -63,14 +63,14 @@
       max-width: 80px
       height: 80px
       @include opacity(100)
-      transition: 1s ease
+      transition: $baseTransition ease
     .icon-weixin:hover
       color: red
     .icon-weixin:hover + .qrcode
       @include opacity(100)
       left: 40px
     .copyright
-      line-height: 50px
+      line-height: $baseHeight * 0.5
       text-align: center
       color: $white
       background-color: $themeColor

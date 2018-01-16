@@ -1,7 +1,7 @@
 <template>
   <div class="mod-loading mod-shadow" v-if="loading">
     <span v-if="hasMore">正在加载...</span>
-    <span v-else>没有更多了~</span>
+    <span v-else class="no-result">没有更多了~</span>
   </div>
 </template>
 
@@ -20,7 +20,9 @@
 
   .mod-loading
     width: 100%
-    line-height: 50px
+    line-height: $baseHeight * 0.5
     text-align: center
     background-color: $white
+    .no-result
+      color: lighten($themeColor, 40%)
 </style>

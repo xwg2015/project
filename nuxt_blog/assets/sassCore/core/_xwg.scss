@@ -41,6 +41,21 @@
     }
 }
 
+// 单行、多行文本溢出显示省略号
+@mixin ellipsis($line:1) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    @if $line == 1 {
+        white-space: nowrap;
+    }
+    @else {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        word-break: break-all;
+        -webkit-line-clamp: $line;
+    }
+}
+
 // flex布局
 // @mixin flex-display($direction:center) {
 //     @include display-flex();

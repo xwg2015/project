@@ -44,17 +44,17 @@
   @import '~assets/sassCore/_function.scss'
 
   .mod-side-card
-    width: 240px
+    width: ($baseWidth - $baseGap) * 0.25
     background-color: $white
-    border-radius: 2px
+    border-radius: $baseRadius
     dt
-      padding: 0 20px
-      line-height: 60px
+      padding: 0 $baseGap
+      line-height: $baseHeight * 0.6
       color: lighten($themeColor, 40%)
     dd
       @include display-flex()
       @include align-items()
-      min-height: 49px
+      min-height: $baseHeight * 0.6
       border-top: 1px solid rgba($themeColor, 0.05)
     h3
       width: 100%
@@ -62,12 +62,12 @@
       font-weight: normal
     a
       display: block
-      padding: 20px
+      padding: 20px $baseGap
       color: $themeColor
       text-align: justify
-      transitions: 0.5s
-    a:hover
-      color: lighten($themeColor, 20%)
+      transition: $baseTransition
+      &:hover
+        color: lighten($themeColor, 20%)
     .multi
       a
         @include display-flex()

@@ -41,19 +41,19 @@
   .mod-layout-main
     @include display-flex()
     @include justify-content()
-    width: $mainWidth
-    margin: 30px auto
+    width: $baseWidth
+    margin: $baseGap auto
     .left
       position: relative
-      width: 720px
+      width: ($baseWidth - $baseGap) * 0.75
     .right
       position: relative
-      width: 240px
+      width: ($baseWidth - $baseGap) * 0.25
     .leftMove
-      @include animation(leftMove 1s ease)
+      @include animation(leftMove $baseTransition ease)
       @include animation-fill-mode(forwards)
     .rightMove
-      @include animation(rightMove 1s ease)
+      @include animation(rightMove $baseTransition ease)
       @include animation-fill-mode(forwards)
   @include keyframes(leftMove)
     from

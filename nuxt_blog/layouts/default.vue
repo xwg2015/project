@@ -7,7 +7,7 @@
 </style>
 
 <style lang="sass">
-  @import '../assets/sassCore/_function.scss'
+  @import '~assets/sassCore/_function.scss'
   body
     background-color: $bgColor
     min-width: $minWidth

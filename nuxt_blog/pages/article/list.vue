@@ -53,7 +53,7 @@
       </template>
     </LayoutMain>
     <VFooter></VFooter>
-    <BackTop :distance="80"></BackTop>
+    <BackTop :distance="74"></BackTop>
   </section>
 </template>
 
@@ -155,14 +155,13 @@
   .page-article-list
     .tab
       @include display-flex()
-      width: $mainWidth
-      margin: 30px auto 0
+      width: $baseWidth
+      margin: $baseGap auto 0
       .tab-item
-        width: 495px
-        height: 100px
-        line-height: 100px
+        width: $baseWidth / 2
+        line-height: $baseHeight
         text-align: center
-        font-size: 20px
+        font-size: $titleFontSize
         background-size: cover
       .technical-item, .journal-item
         cursor: pointer
@@ -179,54 +178,57 @@
         background-image: url('~static/image/journal-active.png')
     .left
       .article-item
-        width: 620px
-        height: 184px
-        padding: 30px 50px
-        margin-bottom: 20px
+        padding: $baseGap $baseGap * 1.5
+        margin-bottom: $baseGap
         background-color: $white
-        border-radius: 2px
+        border-radius: $baseRadius
       .title
-        margin-bottom: 10px
+        margin-bottom: $baseGap / 2
         font-size: 20px
         a
           color: $themeColor
-          transtion: 1s
+          transtion: $baseTransition
       .title:hover
         a
           color: lighten($themeColor, 20%)
       .about
-        @include display-flex()
-        @include justify-content()
-        margin-bottom: 10px
+        position: relative
+        height: $baseImgHeight * 6
+        margin-bottom: $baseGap / 2
       .text
-        width: 410px
+        padding-right: $baseImgWidth * 6 + $baseGap
         text-align: justify
-        line-height: 28px
+        line-height: $baseFontSize * 2
+        @include ellipsis(4)
       .img
-        width: 180px
-        height: 108px
+        position: absolute
+        top: 50%
+        right: 0
+        width: $baseImgWidth * 6
+        height: $baseImgHeight * 6
+        margin-top: -$baseImgHeight * 3
         background-position: center
         background-size: cover
         background-color: $themeColor
+        border-radius: $baseRadius
     .right
       .search
         @include display-flex()
         @include justify-content(flex-start)
         @include align-items()
-        width: 240px
-        height: 70px
-        margin-bottom: 20px
-        font-size: 16px
+        height: $baseHeight * 0.6
+        margin-bottom: $baseGap
+        font-size: $baseFontSize
         background-color: $white
-        border-radius: 2px
+        border-radius: $baseRadius
         input
           border: none
           color: lighten($themeColor, 40%)
           &::-webkit-input-placeholder
             color: lighten($themeColor, 40%)
       .icon-search
-          margin-left: 20px
-          margin-right: 10px
+          margin-left: $baseGap
+          margin-right: $baseGap / 2
           margin-top: -2px
           color: lighten($themeColor, 40%)
 </style>

@@ -50,12 +50,12 @@
     .nav
       @include display-flex()
       a
-        margin: 0 32px
+        margin: 0 $baseGap * 1.5
         color: rgba($white, 0.5)
       a:hover, a.active, .nuxt-link-active
         color: $white
       a:hover
-        transition: 0.5s
+        transition: $baseTransition / 2
   .other-header
     background-color: $white
     .nav

@@ -38,8 +38,7 @@ module.exports = {
   },
   // css样式重置
   css: [
-    '~/assets/sassCore/_reset.scss',
-    'swiper/dist/css/swiper.css'
+    '~assets/sassCore/_reset.scss'
   ],
   // loader
   loaders: [
@@ -58,6 +57,7 @@ module.exports = {
   plugins: [
     { src: '~plugins/vue-ripple-directive', ssr: false },
     { src: '~plugins/vue-fixed-directive', ssr: false },
-    { src: '~plugins/event-bus', ssr: false }
+    { src: '~plugins/event-bus', ssr: false },
+    { src: '~plugins/vue-mavon-editor', ssr: false }
   ]
 }
