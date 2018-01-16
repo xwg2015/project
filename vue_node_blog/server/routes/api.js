@@ -126,28 +126,6 @@ router.get("/getArticle", function (req, res, next) {
   });
 });
 
-router.get("/blog/getArticle", function (req, res, next) {
-  var query = { type: req.query.type };
-
-  Article.find(query, function(err, data) {
-    if (err) throw err;
-    responseData.total = data.length;
-
-    Article.find(query)
-    .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
-    .limit(Number(req.query.pageSize))
-    .sort({
-      isTop: -1,
-      _id: -1
-    })
-    .exec(function (err, data) {
-      if (err) throw err;
-      responseData.data = data;
-      res.json(responseData);
-    });
-  });
-});
-
 // 新建文章
 router.post("/addArticle", function (req, res, next) {
    permission(req, res, next, function(userInfo) {
@@ -417,26 +395,6 @@ router.get("/getProject", function (req, res, next) {
   });
 });
 
-router.get("/blog/getProject", function (req, res, next) {
-  var query = { }
-
-  Project.find(query, function(err, data) {
-    if (err) throw err;
-    responseData.total = data.length;
-    Project.find(query)
-    .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
-    .limit(Number(req.query.pageSize))
-    .sort({
-      _id: -1
-    })
-    .exec(function (err, data) {
-      if (err) throw err;
-      responseData.data = data;
-      res.json(responseData);
-    });
-  });
-});
-
 // 新建项目
 router.post("/addProject", function (req, res, next) {
   permission(req, res, next, function(userInfo) {
@@ -504,6 +462,133 @@ router.post("/hideProject", function (req, res, next) {
      res.json(responseData);
    });
  });
+});
+
+/**
+ * 博客前台接口
+ *
+ */
+
+// 博客前台获取文章和项目列表 各六条数据
+router.get("/blog/getIndex", function (req, res, next) {
+  var query = { };
+
+  Article.find(query)
+  .limit(6)
+  .sort({
+    isTop: -1,
+    views: -1,
+    _id: -1
+  })
+  .exec(function (err, data) {
+    if (err) throw err;
+    responseData.articleData = data;
+  });
+
+  Project.find(query)
+  .limit(6)
+  .sort({
+    isTop: -1,
+    _id: -1
+  })
+  .exec(function (err, data) {
+    if (err) throw err;
+    responseData.projectData = data;
+    res.json(responseData);
+  });
+});
+
+// 博客前台获取文章列表
+router.get("/blog/getArticle", function (req, res, next) {
+  var query = { type: req.query.type };
+
+  Article.find(query, function(err, data) {
+    if (err) throw err;
+    responseData.total = data.length;
+
+    Article.find(query)
+    .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
+    .limit(Number(req.query.pageSize))
+    .sort({
+      isTop: -1,
+      _id: -1
+    })
+    .exec(function (err, data) {
+      if (err) throw err;
+      responseData.data = data;
+      res.json(responseData);
+    });
+  });
+});
+
+// 博客前台获取文章详情
+router.get("/blog/getArticleDetail", function (req, res, next) {
+  var query = { _id: req.query.id };
+
+  var update = {
+    $inc: {
+      views: 1
+    }
+  };
+
+  Article.update(query, update, function(err) {
+    if (err) throw err;
+  });
+
+  Article.find(query, function(err, data) {
+    if (err) throw err;
+    responseData.total = data.length;
+
+    Article.find(query)
+    .exec(function (err, data) {
+      if (err) throw err;
+      responseData.data = data;
+      res.json(responseData);
+    });
+  });
+});
+
+// 博客前台获取热门文章（技术+日志）各五篇
+router.get("/blog/getArticleRecommend", function (req, res, next) {
+  var query = { _id: req.query.id };
+
+  Article.find(query, function(err, data) {
+    if (err) throw err;
+    var subQuery = { type: data[0].type }
+    responseData.total = data.length;
+
+    Article.find(subQuery)
+    .limit(5)
+    .sort({
+      views: -1
+    })
+    .exec(function (err, data) {
+      if (err) throw err;
+      responseData.data = data;
+      res.json(responseData);
+    });
+  });
+});
+
+// 博客前台获取项目列表
+router.get("/blog/getProject", function (req, res, next) {
+  var query = { }
+
+  Project.find(query, function(err, data) {
+    if (err) throw err;
+    responseData.total = data.length;
+    Project.find(query)
+    .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
+    .limit(Number(req.query.pageSize))
+    .sort({
+      _id: -1
+    })
+    .exec(function (err, data) {
+      if (err) throw err;
+      responseData.data = data;
+      res.json(responseData);
+    });
+  });
 });
 
 module.exports = router;

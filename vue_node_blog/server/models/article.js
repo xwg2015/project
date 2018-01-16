@@ -3,10 +3,18 @@ var Schema = mongoose.Schema;
 
 /**
  * type 文章分类
- * 1: artricle 技术文章
+ * 1: technical 技术文章
  * 2: journal 日志
  * 
  * tags 标签，自定义任何标签
+ * 
+ * cover 封面
+ * 
+ * about 简介
+ * 
+ * content 内容
+ * 
+ * views 阅读数
  * 
  * isTop 置顶文章
  * 
@@ -20,6 +28,7 @@ var articleSchema = new Schema({
     type: String,
     tags: String,
     cover: String,
+    views: Number,
     isTop: {
       type: Boolean,
       default: false
