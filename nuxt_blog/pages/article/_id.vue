@@ -13,21 +13,13 @@
                 <div class="time">更新于 {{ detail.updateTime }}</div>
               </div>
             </header>
-            <article class="content">
-              <mavon-editor
-                v-model="detail.content"
-                :ishljs="true"
-                :editable="false"
-                :toolbarsFlag="false"
-                :subfield="false"
-                default_open="preview"/>
-            </article>
+            <article class="content" v-html="markdownRender(detail.content)"></article>
             <div id="SOHUCS" sid="cytppmhxq"></div>
           </div>
         </div>
       </template>
       <template slot="right">
-        <SideCard title="热门推荐" :data="list" v-fixed>
+        <SideCard title="热门推荐" :data="recommendList" v-fixed>
           <template slot="articles" scope="props">
             <dd>
               <a :href="props.url" v-ripple>
@@ -51,6 +43,10 @@
   import SideCard from '~/components/SideCard'
   import BackTop from '~/components/BackTop'
   import axios from 'axios'
+  import MarkdownIt from 'markdown-it'
+  import hljs from 'highlightjs'
+  import 'highlightjs/styles/monokai_sublime.css'
+  // import hljs from 'markdown-it-highlightjs'
 
   export default {
     name: 'ArticleList',
@@ -62,43 +58,46 @@
       SideCard,
       BackTop
     },
-    asyncData ({ params, error }) {
-      return axios.get(`http://xiongwengang.xyz/api/blog/getArticleDetail?id=${params.id}`).then((res) => {
-        return { detail: res.data.data[0] }
-      }).catch((e) => {
+    async asyncData ({ params, error }) {
+      let [detailRes, recommendRes] = await Promise.all([
+        axios.get(`http://xiongwengang.xyz/api/blog/getArticleDetail?id=${params.id}`),
+        axios.get(`http://xiongwengang.xyz/api/blog/getArticleRecommend?id=${params.id}`)
+      ]).catch((e) => {
         error({ statusCode: 404, message: '接口请求报错！' })
       })
+      return {
+        detail: detailRes.data.data[0],
+        recommendList: recommendRes.data.data
+      }
     },
     data () {
       return {
-        list: [
-          {
-            url: '1',
-            title: 'WebP 在减少图片体积和流量上的效果如何？—— WebP 技术实践分享'
-          },
-          {
-            url: '2',
-            title: 'WebP 在减少图片体积'
-          },
-          {
-            url: '3',
-            title: 'WebP 在减少图片体积和流量上'
-          },
-          {
-            url: '4',
-            title: 'WebP 在减少图片体积和流量上的效果如何？—— WebP 技术实践分享'
-          },
-          {
-            url: '5',
-            title: 'WebP 在减少图片体积和流量上的效果如何？'
-          }
-        ]
       }
     },
     mounted () {
       this.getComment()
     },
     methods: {
+      markdownRender (content) {
+        let md = new MarkdownIt({
+          html: true,
+          xhtmlOut: true,
+          breaks: true,
+          linkify: true,
+          typographer: true,
+          highlight: (str, lang) => {
+            if (lang && hljs.getLanguage(lang)) {
+              try {
+                return '<pre class="hljs"><code>' +
+                      hljs.highlight(lang, str, true).value +
+                      '</code></pre>'
+              } catch (__) {}
+            }
+            return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>'
+          }
+        })
+        return md.render(content)
+      },
       getComment () {
         var appid = 'cytppmhxq'
         var conf = 'prod_270829c6f8e17e9e1ac2f756f6335fd2'

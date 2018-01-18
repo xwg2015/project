@@ -14,6 +14,8 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "highlightjs": "^9.10.0",
+    "markdown-it": "^8.4.0",
     "mavon-editor": "^2.4.16",
     "nuxt": "^1.0.0-rc11",
     "vue-ripple-directive": "^2.0.1"
