@@ -2,37 +2,75 @@
   <section class="mod-intro">
     <img src="~static/image/index-bg.png" alt="bg">
     <div class="title">Hello, I'm Xiong Wengang!</div>
-    <!-- <div class="scorpio">
-      <svg version="1.1" id="Vrstva_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="368px" height="295px"
-        viewBox="0 0 368.3 295.5" style="enable-background:new 0 0 368.3 295.5" xml:space="preserve">
-      <path class="st0" d="M356.2,0.5"/>
-      <polyline class="st1" points="67.2,98.2 31.2,140.2 83.2,121.2"/>
-      <polyline class="st1" points="367.2,41.2 297.2,59.2 258.2,79.2 218.2,106.2 181.2,166.2 169.2,231.2 153.2,295.2 85.2,287.2 24.1,253.2 0.2,185.2 30.9,140.4"/>
-      <polyline class="st1" points="352.2,0.2 368,40.3 360.2,91.2"/>
-      </svg>
-    </div> -->
+    <Scorpio></Scorpio>
     <div class="boy" ref="boy">
       <img src="~static/image/boy.png" alt="boy">
-      <div class="tag tag-me"></div>
-      <div class="tag tag-lol"></div>
-      <div class="tag tag-pokemon"></div>
+      <div class="tag tag-boy" ref="tag-boy">
+        <!-- <div class="popover popover-boy" ref="popover-boy">
+          sssjsjsjsjs<br/>
+          sssjsjsjsjs<br/>
+          sssjsjsjsjs<br/>
+        </div> -->
+      </div>
+      <div class="tag tag-lol" ref="tag-lol">
+        <!-- <div class="popover popover-lol" ref="popover-lol">
+          sssjsjsjsjs<br/>
+          sssjsjsjsjs<br/>
+          sssjsjsjsjs<br/>
+        </div> -->
+      </div>
+      <div class="tag tag-pokemon" ref="tag-pokemon">
+        <!-- <div class="popover popover-pokemon" ref="popover-pokemon">
+          sssjsjsjsjs<br/>
+          sssjsjsjsjs<br/>
+          sssjsjsjsjs<br/>
+        </div> -->
+      </div>
     </div>
-    <div class="cat tag tag-mimi" ref="cat">
+    <div class="cat tag tag-cat" ref="cat">
       <img src="~static/image/cat.png" alt="cat">
+      <div class="popover popover-boy" ref="popover-cat">
+        sssjsjsjsjs<br/>
+        sssjsjsjsjs<br/>
+        sssjsjsjsjs<br/>
+      </div>
     </div>
-    <div class="girl tag tag-soulmate" ref="girl">
+    <div class="girl tag tag-girl" ref="girl">
       <img src="~static/image/girl.png" alt="girl">
+      <div class="popover popover-girl" ref="popover-girl">
+        sssjsjsjsjs<br/>
+        sssjsjsjsjs<br/>
+        sssjsjsjsjs<br/>
+      </div>
     </div>
-
-    <section class="mod-popover">
-      
-    </section>
   </section>
 </template>
 
 <script>
+  import Scorpio from '~/components/Scorpio'
+
   export default {
     name: 'Intro',
+    components: {
+      Scorpio
+    },
+    data () {
+      return {
+        tags: ['girl', 'cat'],
+        desc: {
+          girl: {
+            width: 258,
+            height: 520,
+            popoverDir: 'right'
+          },
+          cat: {
+            width: 123,
+            height: 144,
+            popoverDir: 'right'
+          }
+        }
+      }
+    },
     mounted () {
       this.setImageSize()
       window.addEventListener('resize', () => {
@@ -46,9 +84,28 @@
         let oldSize = 1920
         let newSize = window.innerWidth > 1200 ? window.innerWidth : 1200
         let scale = newSize / oldSize
+
+        this.tags.forEach((val, idx, arr) => {
+          for (let key in this.desc[val]) {
+            if (key === 'width' || key === 'height') {
+              this.$refs[val].style[key] = this.desc[val][key] * scale + 'px'
+              console.log(this.$refs[`popover-${val}`])
+            }
+          }
+          this.$refs[`popover-${val}`].style.left = this.desc[val].width * scale + 20 + 'px'
+          this.$refs[`popover-${val}`].style.top = this.desc[val].height / 2 + 'px'
+        })
+
         this.$refs.boy.style.width = 273 * scale + 'px'
-        this.$refs.cat.style.width = 123 * scale + 'px'
-        this.$refs.girl.style.width = 258 * scale + 'px'
+        // this.$refs.cat.style.width = 123 * scale + 'px'
+        // this.$refs.girl.style.width = 258 * scale + 'px'
+
+        // this.$refs.tagMe.style.width = 84 * scale + 'px'
+        // this.$refs.tagMe.style.height = 104 * scale + 'px'
+        // this.$refs.tagLol.style.width = 120 * scale + 'px'
+        // this.$refs.tagLol.style.height = 180 * scale + 'px'
+        // this.$refs.tagPokemon.style.width = 35 * scale + 'px'
+        // this.$refs.tagPokemon.style.height = 65 * scale + 'px'
       }
     }
   }
@@ -81,11 +138,24 @@
     .tag
       position: absolute
       background-color: red
+    .popover
+      position: absolute
+      padding: $baseGap / 2
+      max-width: 200px
+      background: rgba($white, 0.8)
+      border-radius: $baseRadius
+      z-index: 10
+      &:after
+        content: ''
+        position: absolute
+        top: 50%
+        left: -8px
+        margin-top: -4px
+        @include triangle('left', 8px, rgba($white, 0.8))
     .scorpio
       position: absolute
-      top: 0
-      left: 0
-      @include animation(scorpioMove 2s 3s linear)
+      top: 50px
+      left: 120px
     .boy
       position: absolute
       top: 36%
