@@ -56,23 +56,27 @@
         @include opacity(100)
     .qrcode
       position: absolute
-      left: 0
+      left: 40px
       top: -18px
-      z-index: -1
+      z-index: 1
       width: 80px
       max-width: 80px
       height: 80px
-      @include opacity(100)
-      transition: $baseTransition ease
-    .icon-weixin:hover
-      color: red
-    .icon-weixin:hover + .qrcode
-      @include opacity(100)
-      left: 40px
+      @include transform(scale(0))
+    .weixin-wrap:hover 
+      .qrcode
+        @include animation(qrcodeMove 2s ease)
+        @include animation-fill-mode(forwards)
+        @include animation-timing-function(cubic-bezier(.22, .58, .12, .98))
     .copyright
       line-height: $baseHeight * 0.5
       text-align: center
       color: $white
       background-color: $themeColor
+    @include keyframes(qrcodeMove)
+      from
+        @include transform(scale(0))
+      to
+        @include transform(scale(1))
 </style>
 

@@ -1,5 +1,5 @@
 <template>
-  <svg width="200" height="200" class="scorpio" xmlns="http://www.w3.org/2000/svg" version="1.1">
+  <svg width="200" height="200" class="svg-scorpio" xmlns="http://www.w3.org/2000/svg" version="1.1">
     <g>
       <image
         class="star"
@@ -101,7 +101,8 @@
 <style lang="sass">
   @import '~assets/sassCore/_function.scss'
 
-  .scorpio
+  .svg-scorpio
+    display: block
     &:hover .line1
       animation: lineMove 2s linear forwards
     &:hover .line2
