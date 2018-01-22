@@ -8,9 +8,7 @@
         <ul class="card-list">
           <li class="card" v-for="(item, index) in articleList" :key="index">
             <a :href="`/article/${item._id}`" target="_blank" class="card-link">
-              <div class="img-wrap">
-                <img :src="`//xiongwengang.xyz${item.cover}`" :alt="item.title">
-              </div>
+              <div class="img-wrap" :style="`background-image: url(//xiongwengang.xyz${item.cover})`"></div>
               <h3>{{ item.title }}</h3>
             </a>
           </li>
@@ -53,16 +51,6 @@
       }).catch((e) => {
         error({ statusCode: 404, message: '接口请求报错！' })
       })
-    },
-    data () {
-      return {
-      }
-    },
-    beforeMounted () {
-    },
-    mounted () {
-    },
-    methods: {
     }
   }
 </script>
@@ -110,10 +98,15 @@
     .article-content
       .img-wrap
         width: 330px
-        height: 205px
+        height: 220px
+        background-size: cover
+        background-position: center
         border-radius: 4px 4px 0 0
         overflow: hidden
       h3
+        @include display-flex()
+        @include align-items()
+        height: 76px
         padding: 16px
         font-size: 16px
         color: $themeColor

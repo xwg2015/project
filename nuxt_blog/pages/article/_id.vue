@@ -10,7 +10,7 @@
               <h2 class="title">{{ detail.title }}</h2>
               <div class="info">
                 <Tags :tags="detail.tags.split(',')"></Tags>
-                <div class="time">更新于 {{ detail.updateTime }}</div>
+                <div class="time">更新于 {{ detail.updateTime | formatDate }}</div>
               </div>
             </header>
             <article class="content" v-html="markdownRender(detail.content)"></article>
@@ -46,7 +46,7 @@
   import MarkdownIt from 'markdown-it'
   import hljs from 'highlightjs'
   import 'highlightjs/styles/monokai_sublime.css'
-  // import hljs from 'markdown-it-highlightjs'
+  import { formatDate } from '~/assets/lib/formatDate.js'
 
   export default {
     name: 'ArticleList',
@@ -76,6 +76,12 @@
     },
     mounted () {
       this.getComment()
+    },
+    filters: {
+      formatDate (time) {
+        let date = new Date(time)
+        return formatDate(date, 'yyyy-MM-dd hh:mm')
+      }
     },
     methods: {
       markdownRender (content) {
@@ -134,17 +140,6 @@
   @import '~assets/sassCore/_function.scss'
 
   .page-article-detail
-    .markdown-body
-      line-height: $baseFontSize * 2
-      color: $themeColor
-      h1
-        display: none
-    .v-note-wrapper .v-note-panel
-      box-shadow: none
-    .v-note-wrapper .v-note-panel .v-note-show .v-show-content, .v-note-wrapper .v-note-panel .v-note-show .v-show-content-html
-      padding: 0
-      text-align: justify
-      background-color: transparent
     .article
       background-color: $white
       border-radius: $baseRadius
@@ -171,10 +166,19 @@
       @include align-items()
       margin-bottom: $baseGap / 2
     .content
+      padding-top: $baseGap / 2
       margin-bottom: 50px
       line-height: $baseFontSize * 2
       font-size: $articleFontSize
       text-align: justify
+      h1
+        display: none
+      h2, h3, h4, h5, h6
+        line-height: 2
+      p, .hljs
+        margin-bottom: $baseGap
+      p img
+        text-align: center
     .time
       color: lighten($themeColor, 40%)
 </style>
