@@ -41,7 +41,7 @@
         </FormItem>
         <FormItem label="内容" prop="content">
           <input type="hidden" v-model="articleForm.content">
-          <mavon-editor v-model="articleForm.content" default_open="edit" />
+          <mavon-editor ref="mavonEditor" v-model="articleForm.content" @imgAdd="$imgAdd" default_open="edit" />
         </FormItem>
       </Form>
       <div slot="footer">
@@ -372,6 +372,19 @@ export default {
     handleChangeTab (tab) {
       this.curTab = tab
       this.getData(1, tab)
+    },
+    // 图片上传
+    $imgAdd (pos, $file) {
+      var formdata = new FormData()
+      formdata.append('image', $file)
+      axios({
+        url: `${this.$golbal.host}/upload`,
+        method: 'post',
+        data: formdata,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }).then((url) => {
+        this.$refs.mavonEditor.$img2Url(pos, url)
+      })
     },
     // 提交文章
     handleSubmit (name) {
