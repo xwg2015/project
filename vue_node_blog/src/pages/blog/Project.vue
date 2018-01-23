@@ -14,10 +14,10 @@
       width="30"
       :title="`${typeZh[projectForm.type]}项目`">
       <Form :model="projectForm" ref="projectForm" label-position="top" :rules="rules">
-        <FormItem label="项目名称（限15个字之内）" prop="name">
+        <FormItem label="项目名称（限25个字之内）" prop="name">
           <Input v-model="projectForm.name" placeholder="请输入项目名称"></Input>
         </FormItem>
-        <FormItem label="项目简介（限100个字之内）" prop="about">
+        <FormItem label="项目简介（限150个字之内）" prop="about">
           <Input v-model="projectForm.about" type="textarea" :rows="4" placeholder="请输入项目简介"></Input>
         </FormItem>
         <FormItem label="项目链接" prop="link">
@@ -208,8 +208,8 @@ export default {
         }
       ],
       rules: {
-        name: [{ required: true, min: 1, max: 15, message: '项目名称限1-15个字', trigger: 'blur' }],
-        about: [{ required: true, min: 1, max: 50, message: '项目简介限1-50个字', trigger: 'blur' }],
+        name: [{ required: true, min: 1, max: 25, message: '项目名称限1-15个字', trigger: 'blur' }],
+        about: [{ required: true, min: 1, max: 150, message: '项目简介限1-150个字', trigger: 'blur' }],
         link: [{ required: true, message: '请输入项目链接', trigger: 'blur' }],
         cover: [{ required: true, message: '请上传封面图', trigger: 'blur' }]
       }

@@ -217,7 +217,7 @@ export default {
         }
       ],
       rules: {
-        title: [{ required: true, min: 1, max: 15, message: '文章标题限1-25个字', trigger: 'blur' }],
+        title: [{ required: true, min: 1, max: 25, message: '文章标题限1-25个字', trigger: 'blur' }],
         tags: [{ required: true, validator: validateTags, trigger: 'change' }],
         cover: [{ required: true, message: '请上传封面图', trigger: 'blur' }],
         about: [{ required: true, message: '请输入文章简介', trigger: 'blur' }],
@@ -383,7 +383,7 @@ export default {
         data: formdata,
         headers: { 'Content-Type': 'multipart/form-data' }
       }).then((res) => {
-        this.$refs.mavonEditor.$imgUpdateByUrl(pos, `//xiongwengang.xyz${res.data.files.file.path}`)
+        this.$refs.mavonEditor.$img2Url(pos, `//xiongwengang.xyz${res.data.files.file.path}`)
       })
     },
     // 提交文章
