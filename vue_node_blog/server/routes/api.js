@@ -1,29 +1,39 @@
 var express = require("express");
 var md5 = require("md5");
-var path = require("path")
-var formidable = require('formidable');
+var path = require("path");
+var formidable = require("formidable");
 
 var Article = require("../models/article");
 var User = require("../models/user");
 var Project = require("../models/project");
+var Tag = require("../models/tag");
 
 var router = express.Router();
- 
+
 /**
  * 统一返回格式
  * code: 0 无错误
  */
 var responseData;
 
-router.use(function (req, res, next) {
+router.use(function(req, res, next) {
   responseData = {
     code: 0,
     msg: "success",
     data: [],
     total: 0,
     userInfo: {
-      _id: (req.cookies.get("userInfo") && JSON.parse(req.cookies.get("userInfo"))._id) || null,
-      username: (req.cookies.get("userInfo") && new Buffer(JSON.parse(req.cookies.get("userInfo")).username, "base64").toString()) || null
+      _id:
+        (req.cookies.get("userInfo") &&
+          JSON.parse(req.cookies.get("userInfo"))._id) ||
+        null,
+      username:
+        (req.cookies.get("userInfo") &&
+          new Buffer(
+            JSON.parse(req.cookies.get("userInfo")).username,
+            "base64"
+          ).toString()) ||
+        null
     }
   };
   next();
@@ -33,11 +43,11 @@ router.use(function (req, res, next) {
  * 文件上传
  * 前端iview上传组件控制文件大小限制
  */
-router.post("/upload", function(req, res, next){  
+router.post("/upload", function(req, res, next) {
   var form = new formidable.IncomingForm();
 
   form.encoding = "utf-8";
-  form.uploadDir = "/home/xwg/www/upload"
+  form.uploadDir = "/home/xwg/www/upload";
   form.keepExtensions = true;
 
   form.parse(req, function(err, fields, files) {
@@ -53,7 +63,7 @@ router.post("/upload", function(req, res, next){
  * 判断用户是否登录
  * code: 1 未登录
  */
-router.get("/isLogin", function (req, res, next) {
+router.get("/isLogin", function(req, res, next) {
   if (req.cookies.get("userInfo")) {
     responseData.msg = "已登录";
   } else {
@@ -68,12 +78,12 @@ router.get("/isLogin", function (req, res, next) {
  * role: 1 游客 无权限
  * role: 2 管理员 返回自己的文章并操作(除置顶之外)
  * role: 3 超级管理员 为所欲为
- * 
+ *
  * code: 1   无登录
  * code: 403 无权限
  */
-var permission = function  (req, res, next, callback) {
-  User.findOne(responseData.userInfo).then(function (userInfo) {
+var permission = function(req, res, next, callback) {
+  User.findOne(responseData.userInfo).then(function(userInfo) {
     if (!userInfo) {
       responseData.code = 1;
       responseData.msg = "先登录再上车~";
@@ -90,20 +100,19 @@ var permission = function  (req, res, next, callback) {
 
     callback && callback(userInfo);
   });
-}
+};
 
 /**
  * 获取全部文章
- * TODO: 实现标签查询、模糊查询
  */
-router.get("/getArticle", function (req, res, next) {
+router.get("/getArticle", function(req, res, next) {
   permission(req, res, next, function(userInfo) {
     var query;
 
     if (userInfo && userInfo.role === 3) {
-      query = { type: req.query.type }
+      query = { type: req.query.type };
     } else if (userInfo && userInfo.role === 2) {
-      query = { type: req.query.type, author: userInfo.username }
+      query = { type: req.query.type, author: userInfo.username };
     }
 
     Article.find(query, function(err, data) {
@@ -111,24 +120,24 @@ router.get("/getArticle", function (req, res, next) {
       responseData.total = data.length;
 
       Article.find(query)
-      .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
-      .limit(Number(req.query.pageSize))
-      .sort({
-        isTop: -1,
-        _id: -1
-      })
-      .exec(function (err, data) {
-        if (err) throw err;
-        responseData.data = data;
-        res.json(responseData);
-      });
+        .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
+        .limit(Number(req.query.pageSize))
+        .sort({
+          isTop: -1,
+          _id: -1
+        })
+        .exec(function(err, data) {
+          if (err) throw err;
+          responseData.data = data;
+          res.json(responseData);
+        });
     });
   });
 });
 
 // 新建文章
-router.post("/addArticle", function (req, res, next) {
-   permission(req, res, next, function(userInfo) {
+router.post("/addArticle", function(req, res, next) {
+  permission(req, res, next, function(userInfo) {
     var article = new Article({
       author: userInfo.username,
       title: req.body.title,
@@ -140,16 +149,46 @@ router.post("/addArticle", function (req, res, next) {
       createTime: req.body.createTime
     });
 
-    article.save(function(err) {
-      if (err) throw err;
-      res.json(responseData);
-    });
+    article
+      .save(function(err) {
+        if (err) throw err;
+        res.json(responseData);
+      })
+      .then(function(articleInfo) {
+        articleInfo.tags.split(',').forEach(function(val) {
+          Tag.findOne({
+            name: val,
+            type: articleInfo.type
+          }, function(err, TagInfo) {
+            if (TagInfo) {
+              Tag.update(
+                { name: val },
+                { $inc: { articlesNum: 1 } },
+                { $addToSet: { articles: articleInfo.title } },
+                function(err) {
+                  if (err) throw err;
+                }
+              )
+            } else {
+              var tag = new Tag({
+                name: val,
+                type: articleInfo.type,
+                articles: [articleInfo.title],
+                articlesNum: 1
+              })
+              tag.save(function (err){
+                if (err) throw err;
+              })
+            }
+          });
+        });
+      });
   });
 });
 
 // 更新文章
-router.post("/updateArticle", function (req, res, next) {
-   permission(req, res, next, function(userInfo) {
+router.post("/updateArticle", function(req, res, next) {
+  permission(req, res, next, function(userInfo) {
     var query = { _id: req.body.id };
     var update = {
       $set: {
@@ -171,22 +210,22 @@ router.post("/updateArticle", function (req, res, next) {
 });
 
 // 删除文章
-router.post("/deleteArticle", function (req, res, next) {
+router.post("/deleteArticle", function(req, res, next) {
   permission(req, res, next, function(userInfo) {
-   var query = { _id: req.body.id };
+    var query = { _id: req.body.id };
 
-   Article.remove(query, function(err) {
-     if (err) throw err;
-     res.json(responseData);
-   });
- });
+    Article.remove(query, function(err) {
+      if (err) throw err;
+      res.json(responseData);
+    });
+  });
 });
 
 // 置顶文章、取消置顶
-router.post("/topArticle", function (req, res, next) {
-   permission(req, res, next, function(userInfo) {
+router.post("/topArticle", function(req, res, next) {
+  permission(req, res, next, function(userInfo) {
     if (userInfo && userInfo.role === 2) {
-      var text = req.body.isTop ? "置顶" : "取消置顶"
+      var text = req.body.isTop ? "置顶" : "取消置顶";
       responseData.code = 403;
       responseData.msg = `${text}文章请联系超级管理员！`;
       res.json(responseData);
@@ -208,8 +247,8 @@ router.post("/topArticle", function (req, res, next) {
 });
 
 // 前台页面隐藏文章、显示文章
-router.post("/hideArticle", function (req, res, next) {
-   permission(req, res, next, function(userInfo) {
+router.post("/hideArticle", function(req, res, next) {
+  permission(req, res, next, function(userInfo) {
     var query = { _id: req.body.id };
     var update = {
       $set: {
@@ -225,28 +264,26 @@ router.post("/hideArticle", function (req, res, next) {
 });
 
 /**
- * 获取用户列表
- * 该列表只有超级管理员才有权限查看
+ * 获取全部标签
  */
-router.get("/getUser", function (req, res, next) {
-   permission(req, res, next, function(userInfo) {
-    if (userInfo && userInfo.role === 2) {
-      responseData.code = 403;
-      responseData.msg = "只有超级管理员才有权查看用户列表！";
-      res.json(responseData);
-      return;
-    }
-      
-    if (userInfo && userInfo.role === 3) {
-      User.find({}, function(err, data) {
-        if (err) throw err;
-        responseData.total = data.length;
+router.get("/getTag", function(req, res, next) {
+  permission(req, res, next, function(userInfo) {
+    var query;
 
-        User.find({})
+    if (userInfo && userInfo.role === 3) {
+      query = { };
+    } else if (userInfo && userInfo.role === 2) {
+      query = { author: userInfo.username };
+    }
+
+    Tag.find(query, function(err, data) {
+      if (err) throw err;
+      responseData.total = data.length;
+
+      Tag.find(query)
         .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
         .limit(Number(req.query.pageSize))
         .sort({
-          role: -1,
           _id: -1
         })
         .exec(function(err, data) {
@@ -254,17 +291,51 @@ router.get("/getUser", function (req, res, next) {
           responseData.data = data;
           res.json(responseData);
         });
+    });
+  });
+});
+
+/**
+ * 获取用户列表
+ * 该列表只有超级管理员才有权限查看
+ */
+router.get("/getUser", function(req, res, next) {
+  permission(req, res, next, function(userInfo) {
+    if (userInfo && userInfo.role === 2) {
+      responseData.code = 403;
+      responseData.msg = "只有超级管理员才有权查看用户列表！";
+      res.json(responseData);
+      return;
+    }
+
+    if (userInfo && userInfo.role === 3) {
+      User.find({}, function(err, data) {
+        if (err) throw err;
+        responseData.total = data.length;
+
+        User.find({})
+          .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
+          .limit(Number(req.query.pageSize))
+          .sort({
+            role: -1,
+            _id: -1
+          })
+          .exec(function(err, data) {
+            if (err) throw err;
+            responseData.data = data;
+            res.json(responseData);
+          });
       });
     }
   });
 });
 
-/** 
+/**
  * 用户注册
  * code: 1 重复的用户名
  */
-router.post("/register", function (req, res, next) {
-   var role;
+router.post("/register", function(req, res, next) {
+  var role;
   // 邀请码
   // TODO: 实现动态邀请码
   User.findOne({
@@ -291,7 +362,7 @@ router.post("/register", function (req, res, next) {
       role: role,
       createTime: req.body.createTime
     });
-  
+
     user.save(function(err) {
       if (err) throw err;
       res.json(responseData);
@@ -303,8 +374,8 @@ router.post("/register", function (req, res, next) {
  * 用户登录
  * code:1 用户名或密码错误
  */
-router.post("/login", function (req, res, next) {
-   User.findOne({
+router.post("/login", function(req, res, next) {
+  User.findOne({
     username: req.body.username,
     password: md5(req.body.password)
   }).then(function(userInfo) {
@@ -322,23 +393,26 @@ router.post("/login", function (req, res, next) {
      * new Buffer("xxx").toString("base64")    转base64字符
      * new Buffer("xxx", "base64").toString()  base64字符还原
      */
-    req.cookies.set("userInfo", JSON.stringify({
-      _id: userInfo._id,
-      username: new Buffer(userInfo.username).toString("base64")
-    }));
+    req.cookies.set(
+      "userInfo",
+      JSON.stringify({
+        _id: userInfo._id,
+        username: new Buffer(userInfo.username).toString("base64")
+      })
+    );
     res.json(responseData);
     return;
   });
 });
 
 // 用户退出
-router.post("/logout", function (req, res, next) {
+router.post("/logout", function(req, res, next) {
   req.cookies.set("userInfo", null);
   res.json(responseData);
 });
 
 // 设置、取消管理员
-router.post("/adminUser", function (req, res, next) {
+router.post("/adminUser", function(req, res, next) {
   permission(req, res, next, function(userInfo) {
     if (userInfo && userInfo.role === 2) {
       responseData.code = 403;
@@ -354,7 +428,7 @@ router.post("/adminUser", function (req, res, next) {
           role: req.body.role
         }
       };
-  
+
       User.update(query, update, function(err) {
         if (err) throw err;
         res.json(responseData);
@@ -365,103 +439,102 @@ router.post("/adminUser", function (req, res, next) {
 
 /**
  * 获取全部项目
- * TODO: 实现模糊查询
  */
-router.get("/getProject", function (req, res, next) {
+router.get("/getProject", function(req, res, next) {
   permission(req, res, next, function(userInfo) {
     var query;
 
     if (userInfo && userInfo.role === 3) {
-      query = { }
+      query = {};
     } else if (userInfo && userInfo.role === 2) {
-      query = { author: userInfo.username }
+      query = { author: userInfo.username };
     }
 
     Project.find(query, function(err, data) {
       if (err) throw err;
       responseData.total = data.length;
       Project.find(query)
-      .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
-      .limit(Number(req.query.pageSize))
-      .sort({
-        _id: -1
-      })
-      .exec(function (err, data) {
-        if (err) throw err;
-        responseData.data = data;
-        res.json(responseData);
-      });
+        .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
+        .limit(Number(req.query.pageSize))
+        .sort({
+          _id: -1
+        })
+        .exec(function(err, data) {
+          if (err) throw err;
+          responseData.data = data;
+          res.json(responseData);
+        });
     });
   });
 });
 
 // 新建项目
-router.post("/addProject", function (req, res, next) {
+router.post("/addProject", function(req, res, next) {
   permission(req, res, next, function(userInfo) {
-   var project = new Project({
-     author: userInfo.username,
-     name: req.body.name,
-     about: req.body.about,
-     link: req.body.link,
-     cover: req.body.cover,
-     createTime: req.body.createTime
-   });
+    var project = new Project({
+      author: userInfo.username,
+      name: req.body.name,
+      about: req.body.about,
+      link: req.body.link,
+      cover: req.body.cover,
+      createTime: req.body.createTime
+    });
 
-   project.save(function(err) {
-     if (err) throw err;
-     res.json(responseData);
-   });
- });
+    project.save(function(err) {
+      if (err) throw err;
+      res.json(responseData);
+    });
+  });
 });
 
 // 更新项目
-router.post("/updateProject", function (req, res, next) {
+router.post("/updateProject", function(req, res, next) {
   permission(req, res, next, function(userInfo) {
-   var query = { _id: req.body.id };
-   var update = {
-     $set: {
-       author: userInfo.username,
-       name: req.body.name,
-       about: req.body.about,
-       link: req.body.link,
-       cover: req.body.cover
-     }
-   };
+    var query = { _id: req.body.id };
+    var update = {
+      $set: {
+        author: userInfo.username,
+        name: req.body.name,
+        about: req.body.about,
+        link: req.body.link,
+        cover: req.body.cover
+      }
+    };
 
-   Project.update(query, update, function(err) {
-     if (err) throw err;
-     res.json(responseData);
-   });
- });
+    Project.update(query, update, function(err) {
+      if (err) throw err;
+      res.json(responseData);
+    });
+  });
 });
 
 // 删除项目
-router.post("/deleteProject", function (req, res, next) {
+router.post("/deleteProject", function(req, res, next) {
   permission(req, res, next, function(userInfo) {
-   var query = { _id: req.body.id };
+    var query = { _id: req.body.id };
 
-   Project.remove(query, function(err) {
-     if (err) throw err;
-     res.json(responseData);
-   });
- });
+    Project.remove(query, function(err) {
+      if (err) throw err;
+      res.json(responseData);
+    });
+  });
 });
 
 // 前台页面隐藏项目、显示项目
-router.post("/hideProject", function (req, res, next) {
+router.post("/hideProject", function(req, res, next) {
   permission(req, res, next, function(userInfo) {
-   var query = { _id: req.body.id };
-   var update = {
-     $set: {
-       isShow: req.body.isShow
-     }
-   };
+    var query = { _id: req.body.id };
+    var update = {
+      $set: {
+        isShow: req.body.isShow
+      }
+    };
 
-   Project.update(query, update, function(err) {
-     if (err) throw err;
-     res.json(responseData);
-   });
- });
+    Project.update(query, update, function(err) {
+      if (err) throw err;
+      res.json(responseData);
+    });
+  });
 });
 
 /**
@@ -470,36 +543,36 @@ router.post("/hideProject", function (req, res, next) {
  */
 
 // 博客前台获取文章和项目列表 各六条数据
-router.get("/blog/getIndex", function (req, res, next) {
-  var query = { };
+router.get("/blog/getIndex", function(req, res, next) {
+  var query = {};
 
   Article.find(query)
-  .limit(6)
-  .sort({
-    isTop: -1,
-    views: -1,
-    _id: -1
-  })
-  .exec(function (err, data) {
-    if (err) throw err;
-    responseData.articleData = data;
-
-    Project.find(query)
     .limit(6)
     .sort({
       isTop: -1,
+      views: -1,
       _id: -1
     })
-    .exec(function (err, data) {
+    .exec(function(err, data) {
       if (err) throw err;
-      responseData.projectData = data;
-      res.json(responseData);
+      responseData.articleData = data;
+
+      Project.find(query)
+        .limit(6)
+        .sort({
+          isTop: -1,
+          _id: -1
+        })
+        .exec(function(err, data) {
+          if (err) throw err;
+          responseData.projectData = data;
+          res.json(responseData);
+        });
     });
-  });
 });
 
 // 博客前台获取文章列表
-router.get("/blog/getArticle", function (req, res, next) {
+router.get("/blog/getArticle", function(req, res, next) {
   var query = { type: req.query.type };
 
   Article.find(query, function(err, data) {
@@ -507,22 +580,22 @@ router.get("/blog/getArticle", function (req, res, next) {
     responseData.total = data.length;
 
     Article.find(query)
-    .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
-    .limit(Number(req.query.pageSize))
-    .sort({
-      isTop: -1,
-      _id: -1
-    })
-    .exec(function (err, data) {
-      if (err) throw err;
-      responseData.data = data;
-      res.json(responseData);
-    });
+      .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
+      .limit(Number(req.query.pageSize))
+      .sort({
+        isTop: -1,
+        _id: -1
+      })
+      .exec(function(err, data) {
+        if (err) throw err;
+        responseData.data = data;
+        res.json(responseData);
+      });
   });
 });
 
 // 博客前台获取文章详情
-router.get("/blog/getArticleDetail", function (req, res, next) {
+router.get("/blog/getArticleDetail", function(req, res, next) {
   var query = { _id: req.query.id };
 
   var update = {
@@ -539,8 +612,7 @@ router.get("/blog/getArticleDetail", function (req, res, next) {
     if (err) throw err;
     responseData.total = data.length;
 
-    Article.find(query)
-    .exec(function (err, data) {
+    Article.find(query).exec(function(err, data) {
       if (err) throw err;
       responseData.data = data;
       res.json(responseData);
@@ -549,45 +621,60 @@ router.get("/blog/getArticleDetail", function (req, res, next) {
 });
 
 // 博客前台获取热门文章（技术+日志）各五篇
-router.get("/blog/getArticleRecommend", function (req, res, next) {
+router.get("/blog/getArticleRecommend", function(req, res, next) {
   var query = { _id: req.query.id };
 
   Article.find(query, function(err, data) {
     if (err) throw err;
-    var subQuery = { type: data[0].type }
+    var subQuery = { type: data[0].type };
     responseData.total = data.length;
 
     Article.find(subQuery)
-    .limit(5)
+      .limit(5)
+      .sort({
+        views: -1
+      })
+      .exec(function(err, data) {
+        if (err) throw err;
+        responseData.data = data;
+        res.json(responseData);
+      });
+  });
+});
+
+// 博客前台获取文章分类标签
+router.get("/blog/getTag", function(req, res, next) {
+  var query
+  query = req.query.type ? { type: req.query.type } : {}
+  Tag.find(query)
     .sort({
-      views: -1
+      articlesNum: -1
     })
-    .exec(function (err, data) {
+    .exec(function(err, data) {
       if (err) throw err;
       responseData.data = data;
       res.json(responseData);
     });
-  });
 });
 
 // 博客前台获取项目列表
-router.get("/blog/getProject", function (req, res, next) {
-  var query = { }
+router.get("/blog/getProject", function(req, res, next) {
+  var query = {};
 
   Project.find(query, function(err, data) {
     if (err) throw err;
     responseData.total = data.length;
     Project.find(query)
-    .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
-    .limit(Number(req.query.pageSize))
-    .sort({
-      _id: -1
-    })
-    .exec(function (err, data) {
-      if (err) throw err;
-      responseData.data = data;
-      res.json(responseData);
-    });
+      .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
+      .limit(Number(req.query.pageSize))
+      .sort({
+        _id: -1
+      })
+      .exec(function(err, data) {
+        if (err) throw err;
+        responseData.data = data;
+        res.json(responseData);
+      });
   });
 });
 

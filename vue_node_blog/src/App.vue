@@ -8,7 +8,7 @@
         </Col>
         <Col span="1">&nbsp;</Col>
         <Col span="17">
-          <router-view/>
+          <router-view />
         </Col>
         <Col span="1">&nbsp;</Col>
       </Row>

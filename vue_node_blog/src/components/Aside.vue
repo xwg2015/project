@@ -15,6 +15,7 @@
             个人博客后台
           </template>
           <MenuItem name="/blog/article">文章管理</MenuItem>
+          <MenuItem name="/blog/tag"> 文章标签</MenuItem>
           <MenuItem name="/blog/project">项目管理</MenuItem>
           <MenuItem name="/blog/resume">简历管理</MenuItem>
         </Submenu>

@@ -219,7 +219,7 @@ export default {
       rules: {
         title: [{ required: true, min: 1, max: 25, message: '文章标题限1-25个字', trigger: 'blur' }],
         tags: [{ required: true, validator: validateTags, trigger: 'change' }],
-        cover: [{ required: true, message: '请上传封面图', trigger: 'blur' }],
+        // cover: [{ required: true, message: '请上传封面图', trigger: 'blur' }],
         about: [{ required: true, message: '请输入文章简介', trigger: 'blur' }],
         content: [{ required: true, message: '请输入文章内容', trigger: 'blur' }]
       }
