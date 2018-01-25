@@ -551,11 +551,7 @@ router.get("/blog/getArticle", function(req, res, next) {
 function getTag(arr) {
   let tmp = []
   arr.forEach(function(val) {
-    if (val.indexOf(',') !== -1) {
-      tmp = tmp.concat(val.split(','))
-    } else {
-      tmp.push(val)
-    }
+    tmp = tmp.concat(val)
   })
   return tmp
 }
