@@ -6,9 +6,9 @@
 
 ## 插件界面
 每天小手点一下，便知项目进展噢~  
-![image](https://raw.githubusercontent.com/JustLikeU/study/master/chrome_task/image/example1.png)  
-![image](https://raw.githubusercontent.com/JustLikeU/study/master/chrome_task/image/example2.png)  
-![image](https://raw.githubusercontent.com/JustLikeU/study/master/chrome_task/image/example3.png)  
+![image](https://raw.githubusercontent.com/JustLikeU/project/master/chrome_task/image/example1.png)  
+![image](https://raw.githubusercontent.com/JustLikeU/project/master/chrome_task/image/example2.png)  
+![image](https://raw.githubusercontent.com/JustLikeU/project/master/chrome_task/image/example3.png)  
 
 ## 安装使用
 1.在chrome浏览器里输入，chrome://extensions/  
