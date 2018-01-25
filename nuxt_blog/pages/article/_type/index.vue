@@ -15,7 +15,7 @@
                 <p class="text">{{ item.about }}</p>
                 <div class="img" :style="`background-image: url(//xiongwengang.xyz${item.cover})`"></div>
               </div>
-              <Tags :tags="item.tags.split(',')"></Tags>
+              <Tags :tags="item.tags"></Tags>
             </li>
           </ul>
         </div>
@@ -27,24 +27,24 @@
                 <p class="text">{{ item.about }}</p>
                 <div class="img" :style="`background-image: url(//xiongwengang.xyz${item.cover})`"></div>
               </div>
-              <Tags :tags="item.tags.split(',')"></Tags>
+              <Tags :tags="item.tags"></Tags>
             </li>
           </ul>
         </div>
         <Loading :loading="loading" :hasMore="hasMore"></Loading>
       </template>
       <template slot="right">
-        <div v-fixed>
+        <div v-fixed="228">
           <div class="mod-shadow search">
             <i class="iconfont icon-search"></i>
             <input type="text" placeholder="搜索文章">
           </div>
           <SideCard title="标签" row="multi" :data="tagList">
             <template slot="tags" scope="props">
-              <dd>
-                <a :href="props.url" v-ripple>
+              <dd class="dd-tags">
+                <a :href="`${curTab}/${props.tagName}`" v-ripple>
                   <h3>{{ props.tagName }}</h3>
-                  <span class="num">{{ props.num }}</span>
+                  <span class="num">{{ props.count }}</span>
                 </a>
               </dd>
             </template>
@@ -79,8 +79,19 @@
       Loading
     },
     asyncData ({ params, error }) {
-      return axios.get('http://xiongwengang.xyz/api/blog/getArticle?pageCurrent=1&pageSize=3&type=technical').then((res) => {
-        return { list: res.data.data }
+      let opts = {
+        baseUrl: 'http://xiongwengang.xyz/api/blog/getArticle',
+        pageCurrent: 1,
+        pageSize: 3
+      }
+      let tag = params.tag ? `&tag=${encodeURI(params.tag)}` : ''
+      let query = `?pageCurrent=${opts.pageCurrent}&pageSize=${opts.pageSize}&type=${params.type}${tag}`
+      return axios.get(opts.baseUrl + query).then((res) => {
+        return {
+          list: res.data.data,
+          tagList: res.data.tags,
+          curTab: params.type
+        }
       }).catch((e) => {
         error({ statusCode: 404, message: '接口请求报错！' })
       })
@@ -88,26 +99,8 @@
     data () {
       return {
         curPage: 1,
-        curTab: 'technical',
         loading: false,
-        hasMore: true,
-        tagList: [
-          {
-            name: 'javascript',
-            num: '21',
-            url: 'javascript'
-          },
-          {
-            name: 'css',
-            num: '8',
-            url: 'css'
-          },
-          {
-            name: 'html',
-            num: '2',
-            url: 'html'
-          }
-        ]
+        hasMore: true
       }
     },
     mounted () {
@@ -134,16 +127,7 @@
     },
     methods: {
       tabChange (type) {
-        this.curTab = type
-        this.$bus.$emit('is-clicked', true)
-        axios.get(`http://xiongwengang.xyz/api/blog/getArticle?pageCurrent=1&pageSize=3&type=${this.curTab}`).then((res) => {
-          this.list = res.data.data
-          this.loading = false
-          this.hasMore = true
-          this.curPage = 1
-        })
-      },
-      handleMore () {
+        this.$router.push(type)
       }
     }
   }

@@ -6,14 +6,13 @@
         name="articles"
         v-for="item in data"
         :title="item.title"
-        :url="item.url">
+        :id="item._id">
       </slot>
       <slot
         name="tags"
         v-for="item in data"
         :tag-name="item.name"
-        :num="item.num"
-        :url="item.url">
+        :count="item.count">
       </slot>
     </dl>
   </section>
@@ -56,6 +55,10 @@
       @include align-items()
       min-height: $baseHeight * 0.6
       border-top: 1px solid rgba($themeColor, 0.05)
+    .dd-tags
+      min-height: $baseHeight * 0.4
+      a
+        padding: 10px $baseGap
     h3
       width: 100%
       font-size: 14px

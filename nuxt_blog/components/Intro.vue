@@ -35,8 +35,7 @@
       <div class="tag tag-pokemon" ref="pokemon">
         <div class="popover popover-right popover-pokemon" ref="popover-pokemon">
           <h2>标签：Pokémon</h2>
-          <p>目标是神奇宝贝大师，曾经无数次幻想能有那样的异次元世界，收服神奇宝贝，打道馆，挑战四大天王。</p>
-          <p>期待口袋妖怪正统作登陆NS!</p>
+          <p>目标是神奇宝贝大师，曾经无数次幻想能有那样的异次元世界，收服神奇宝贝，打道馆，挑战四大天王。期待口袋妖怪正统作登陆NS!</p>
         </div>
       </div>
     </div>

@@ -9,7 +9,7 @@
             <header class="header">
               <h2 class="title">{{ detail.title }}</h2>
               <div class="info">
-                <Tags :tags="detail.tags.split(',')"></Tags>
+                <Tags :tags="detail.tags"></Tags>
                 <div class="time">更新于 {{ detail.updateTime | formatDate }}</div>
               </div>
             </header>
@@ -19,10 +19,10 @@
         </div>
       </template>
       <template slot="right">
-        <SideCard title="热门推荐" :data="recommendList" v-fixed>
+        <SideCard title="热门推荐" :data="recommendList" v-fixed="104">
           <template slot="articles" scope="props">
             <dd>
-              <a :href="props.url" v-ripple>
+              <a :href="props.id" v-ripple>
                 <h3>{{props.title}}</h3>
               </a>
             </dd>

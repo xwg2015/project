@@ -108,8 +108,9 @@
     .img-wrap
       width: $baseImgWidth * 9
       height: $baseImgHeight * 9
-      background-size: 100%
+      background-size: cover
       background-position: center
+      background-repeat: no-repeat
       border-radius: $baseRadius
     .info
       position: relative
