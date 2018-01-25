@@ -86,10 +86,10 @@ export default {
           title: '作者',
           key: 'author'
         },
-        {
-          title: '简介',
-          key: 'about'
-        },
+        // {
+        //   title: '简介',
+        //   key: 'about'
+        // },
         {
           title: '链接',
           key: 'link',

@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import BlogArticle from '@/pages/blog/Article'
-import BlogTag from '@/pages/blog/Tag'
 import BlogProject from '@/pages/blog/Project'
 import BlogResume from '@/pages/blog/Resume'
 import SystemUser from '@/pages/system/User'
@@ -25,11 +24,6 @@ export default new Router({
       path: '/blog/article',
       name: 'BlogArticle',
       component: BlogArticle
-    },
-    {
-      path: '/blog/tag',
-      name: 'BlogTag',
-      component: BlogTag
     },
     {
       path: '/blog/project',

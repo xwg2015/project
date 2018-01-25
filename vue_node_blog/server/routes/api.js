@@ -6,7 +6,6 @@ var formidable = require("formidable");
 var Article = require("../models/article");
 var User = require("../models/user");
 var Project = require("../models/project");
-var Tag = require("../models/tag");
 
 var router = express.Router();
 
@@ -153,35 +152,6 @@ router.post("/addArticle", function(req, res, next) {
       .save(function(err) {
         if (err) throw err;
         res.json(responseData);
-      })
-      .then(function(articleInfo) {
-        articleInfo.tags.split(',').forEach(function(val) {
-          Tag.findOne({
-            name: val,
-            type: articleInfo.type
-          }, function(err, TagInfo) {
-            if (TagInfo) {
-              Tag.update(
-                { name: val },
-                { $inc: { articlesNum: 1 } },
-                { $addToSet: { articles: articleInfo.title } },
-                function(err) {
-                  if (err) throw err;
-                }
-              )
-            } else {
-              var tag = new Tag({
-                name: val,
-                type: articleInfo.type,
-                articles: [articleInfo.title],
-                articlesNum: 1
-              })
-              tag.save(function (err){
-                if (err) throw err;
-              })
-            }
-          });
-        });
       });
   });
 });
@@ -263,37 +233,6 @@ router.post("/hideArticle", function(req, res, next) {
   });
 });
 
-/**
- * 获取全部标签
- */
-router.get("/getTag", function(req, res, next) {
-  permission(req, res, next, function(userInfo) {
-    var query;
-
-    if (userInfo && userInfo.role === 3) {
-      query = { };
-    } else if (userInfo && userInfo.role === 2) {
-      query = { author: userInfo.username };
-    }
-
-    Tag.find(query, function(err, data) {
-      if (err) throw err;
-      responseData.total = data.length;
-
-      Tag.find(query)
-        .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
-        .limit(Number(req.query.pageSize))
-        .sort({
-          _id: -1
-        })
-        .exec(function(err, data) {
-          if (err) throw err;
-          responseData.data = data;
-          res.json(responseData);
-        });
-    });
-  });
-});
 
 /**
  * 获取用户列表
@@ -350,9 +289,9 @@ router.post("/register", function(req, res, next) {
 
     if (req.body.code === "_admin1122@") {
       // 想成为超管，不存在的
-      role = 2;
+      role = 1;
     } else if (req.body.code === "_admin1028@") {
-      role = 2;
+      role = 1;
     } else {
       role = 1;
     }
@@ -573,14 +512,29 @@ router.get("/blog/getIndex", function(req, res, next) {
 
 // 博客前台获取文章列表
 router.get("/blog/getArticle", function(req, res, next) {
-  var query = { type: req.query.type };
+  var query, subQuery;
+  query = req.query.type ? { type: req.query.type } : {};
 
   Article.find(query, function(err, data) {
     if (err) throw err;
-    responseData.total = data.length;
+    var tags = data.map(function(val) {
+      return val.tags
+    })
+    responseData.tags = getCount(getTag(tags))
 
-    Article.find(query)
-      .skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
+    if (req.query.tag) {
+      subQuery = { ...query, tags: { $all: [req.query.tag] } }
+    } else if (req.query.title) {
+      var reg = new RegExp(req.query.title)
+      subQuery = { ...query, title: { $regex: reg } } 
+    } else {
+      subQuery = query
+    }
+
+    Article.find(subQuery, function(err, data) {
+      if (err) throw err;
+      responseData.total = data.length;
+    }).skip(Number((req.query.pageCurrent - 1) * req.query.pageSize))
       .limit(Number(req.query.pageSize))
       .sort({
         isTop: -1,
@@ -593,6 +547,43 @@ router.get("/blog/getArticle", function(req, res, next) {
       });
   });
 });
+
+function getTag(arr) {
+  let tmp = []
+  arr.forEach(function(val) {
+    if (val.indexOf(',') !== -1) {
+      tmp = tmp.concat(val.split(','))
+    } else {
+      tmp.push(val)
+    }
+  })
+  return tmp
+}
+
+function getCount(arr, rank, ranktype) {
+  var obj = {},
+    k,
+    arr1 = [];
+  for (var i = 0, len = arr.length; i < len; i++) {
+    k = arr[i];
+    if (obj[k]) obj[k]++;
+    else obj[k] = 1;
+  }
+  //保存结果{name-标签名，count-出现次数}
+  for (var o in obj) {
+    arr1.push({ name: o, count: obj[o] });
+  }
+  //排序（降序）
+  arr1.sort(function(n1, n2) {
+    return n2.count - n1.count;
+  });
+  //如果ranktype为1，则为升序，反转数组
+  if (ranktype === 1) {
+    arr1 = arr1.reverse();
+  }
+  var rank1 = rank || arr1.length;
+  return arr1.slice(0, rank1);
+}
 
 // 博客前台获取文章详情
 router.get("/blog/getArticleDetail", function(req, res, next) {
@@ -640,21 +631,6 @@ router.get("/blog/getArticleRecommend", function(req, res, next) {
         res.json(responseData);
       });
   });
-});
-
-// 博客前台获取文章分类标签
-router.get("/blog/getTag", function(req, res, next) {
-  var query
-  query = req.query.type ? { type: req.query.type } : {}
-  Tag.find(query)
-    .sort({
-      articlesNum: -1
-    })
-    .exec(function(err, data) {
-      if (err) throw err;
-      responseData.data = data;
-      res.json(responseData);
-    });
 });
 
 // 博客前台获取项目列表

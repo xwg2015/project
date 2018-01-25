@@ -114,7 +114,10 @@ export default {
         },
         {
           title: '标签',
-          key: 'tags'
+          key: 'tags',
+          render: (h, params) => {
+            return h('span', params.row.tags.join('，'))
+          }
         },
         {
           title: '创建时间',
@@ -321,7 +324,7 @@ export default {
         type: 'update',
         title: this.technicalData[index].title,
         tab: this.technicalData[index].type,
-        tags: this.technicalData[index].tags.split(','),
+        tags: this.technicalData[index].tags,
         cover: this.technicalData[index].cover,
         about: this.technicalData[index].about,
         content: this.technicalData[index].content
@@ -409,7 +412,7 @@ export default {
         id: _this.articleForm.id,
         title: _this.articleForm.title,
         type: _this.articleForm.tab,
-        tags: _this.articleForm.tags.join(','),
+        tags: _this.articleForm.tags,
         cover: _this.articleForm.cover,
         about: _this.articleForm.about,
         content: _this.articleForm.content,

@@ -26,7 +26,7 @@ var articleSchema = new Schema({
     about: String,
     content: String,
     type: String,
-    tags: String,
+    tags: Array,
     cover: String,
     views: Number,
     isTop: {
