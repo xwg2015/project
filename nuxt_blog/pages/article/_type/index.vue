@@ -1,57 +1,47 @@
 <template>
   <section class="page page-article-list">
     <VHeader :is-other="true"></VHeader>
-    <div class="tab">
-      <h2 class="mod-shadow tab-item technical-item" :class="{ 'active': curTab === 'technical' }" @click="tabChange('technical')">技术</h2>
-      <h2 class="mod-shadow tab-item journal-item" :class="{ 'active': curTab === 'journal' }" @click="tabChange('journal')">! 技术</h2>
-    </div>
-    <LayoutMain>
-      <template slot="left">
-        <div class="tab-content technical-content" v-show="curTab === 'technical'" ref="tabContent">
-          <ul class="article-list">
-            <li class="mod-shadow article-item" v-for="item in list" :key="item._id">
-              <h3 class="title"><a :href="`/article/${item._id}`" target="_blank">{{  item.title }}</a></h3>
-              <div class="about">
-                <p class="text">{{ item.about }}</p>
-                <div class="img" :style="`background-image: url(//xiongwengang.xyz${item.cover})`"></div>
-              </div>
-              <Tags :tags="item.tags"></Tags>
-            </li>
-          </ul>
-        </div>
-        <div class="tab-content journal-content" v-show="curTab === 'journal'">
-          <ul class="article-list">
-            <li class="mod-shadow article-item" v-for="item in list" :key="item._id">
-              <h3 class="title"><a :href="`/article/${item._id}`" target="_blank">{{  item.title }}</a></h3>
-              <div class="about">
-                <p class="text">{{ item.about }}</p>
-                <div class="img" :style="`background-image: url(//xiongwengang.xyz${item.cover})`"></div>
-              </div>
-              <Tags :tags="item.tags"></Tags>
-            </li>
-          </ul>
-        </div>
-        <Loading :loading="loading" :hasMore="hasMore"></Loading>
-      </template>
-      <template slot="right">
-        <div v-fixed="228">
-          <div class="mod-shadow search">
-            <i class="iconfont icon-search"></i>
-            <input type="text" placeholder="搜索文章">
+    <section class="mod-bd">
+      <div class="tab">
+        <h2 class="mod-shadow tab-item technical-item" :class="{ 'active': curType === 'technical' }" @click="tabChange('technical')">技术</h2>
+        <h2 class="mod-shadow tab-item journal-item" :class="{ 'active': curType === 'journal' }" @click="tabChange('journal')">! 技术</h2>
+      </div>
+      <LayoutMain>
+        <template slot="left">
+          <div class="tab-content">
+            <ul class="article-list">
+              <li class="mod-shadow article-item" v-for="item in list" :key="item._id">
+                <h3 class="title"><a :href="`/article/detail/${item._id}`" target="_blank">{{  item.title }}</a></h3>
+                <div class="about">
+                  <p class="text">{{ item.about }}</p>
+                  <div class="img" :style="`background-image: url(//xiongwengang.xyz${item.cover})`"></div>
+                </div>
+                <Tags :tags="item.tags"></Tags>
+              </li>
+            </ul>
           </div>
-          <SideCard title="标签" row="multi" :data="tagList">
-            <template slot="tags" scope="props">
-              <dd class="dd-tags">
-                <a :href="`${curTab}/${props.tagName}`" v-ripple>
-                  <h3>{{ props.tagName }}</h3>
-                  <span class="num">{{ props.count }}</span>
-                </a>
-              </dd>
-            </template>
-          </SideCard>
-        </div>
-      </template>
-    </LayoutMain>
+          <Loading :loading="loading" :hasMore="hasMore"></Loading>
+        </template>
+        <template slot="right">
+          <div v-fixed="228">
+            <!-- <div class="mod-shadow search">
+              <i class="iconfont icon-search"></i>
+              <input type="text" placeholder="搜索文章">
+            </div> -->
+            <SideCard title="标签" row="multi" :data="tagList">
+              <template slot="tags" scope="props">
+                <dd class="dd-tags">
+                  <a :href="`${curType}/${props.tagName}`" v-ripple>
+                    <h3>{{ props.tagName }}</h3>
+                    <span class="num">{{ props.count }}</span>
+                  </a>
+                </dd>
+              </template>
+            </SideCard>
+          </div>
+        </template>
+      </LayoutMain>
+    </section>
     <VFooter></VFooter>
     <BackTop :distance="74"></BackTop>
   </section>
@@ -90,7 +80,8 @@
         return {
           list: res.data.data,
           tagList: res.data.tags,
-          curTab: params.type
+          curType: params.type,
+          curTag: params.Tag
         }
       }).catch((e) => {
         error({ statusCode: 404, message: '接口请求报错！' })
@@ -112,7 +103,7 @@
         setTimeout(() => {
           if (srcollTop + clientHeight === scrollHeight && this.hasMore) {
             this.loading = true
-            axios.get(`http://xiongwengang.xyz/api/blog/getArticle?pageCurrent=${page}&pageSize=3&type=${this.curTab}`).then((res) => {
+            axios.get(`http://xiongwengang.xyz/api/blog/getArticle?pageCurrent=${page}&pageSize=3&type=${this.curType}`).then((res) => {
               if (res.data.data.length > 0) {
                 this.hasMore = true
                 this.curPage = page
@@ -135,8 +126,10 @@
 
 <style lang="sass">
   @import '~assets/sassCore/_function.scss'
-
   .page-article-list
+    @include display-flex()
+    @include flex-direction()
+    height: 100%
     .tab
       @include display-flex()
       width: $baseWidth

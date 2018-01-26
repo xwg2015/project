@@ -4,7 +4,7 @@
     <div class="tag tag-hk" ref="hk">
       <div class="popover popover-right popover-hk" ref="popover-hk">
         <h2>标签：TVB</h2>
-        <p>从小在我妈的带领下，爱上了看港剧，也爱上了香港这座城市。</p>
+        <p>从小在我妈的带领下，爱上看港剧，也爱上香港这座城市。</p>
         <p>呐，做人呢，最重要的是开心。</p>
       </div>
     </div>
@@ -13,8 +13,8 @@
       <Scorpio></Scorpio>
       <div class="popover popover-right popover-scorpio" ref="popover-scorpio">
         <h2>标签：天蝎座</h2>
-        <p>典型天蝎男，外冷内热，占有欲强，爱记仇。</p>
-        <p>不管你们信不信星座，反正我是信了。详细见：《为什么我会信星座？》</p>
+        <p>典型天蝎男，外冷(men)内热(sao)，占有欲强，报复心强。</p>
+        <p>不管你们信不信星座，反正我是信了。见《为什么我会信星座》</p>
       </div>
     </div>
     <div class="boy" ref="boy">
@@ -28,7 +28,7 @@
       <div class="tag tag-lol" ref="lol">
         <div class="popover popover-left popover-lol" ref="popover-lol">
           <h2>标签：英雄联盟</h2>
-          <p>看过WE与CLG.EU八小时的拉锯战，也看过皇族连续两年赢了OMG且挺进决赛，更加期待S7能跟曾经大学一起开黑的室友一起去北京鸟巢见证RNG夺冠，奈何。力挺全华班RNG，Uzi加油。</p>
+          <p>看过WE与CLG.EU八小时的拉锯战，也看过皇族连续两年赢了OMG挺进决赛，更加期待S7能跟曾经大学一起开黑的室友一起去北京鸟巢见证RNG夺冠，奈何。力挺全华班RNG，Uzi加油。</p>
           <p>对了，<strong>大麦网垃圾</strong>。</p>
         </div>
       </div>
@@ -44,7 +44,7 @@
       <div class="popover popover-right popover-boy" ref="popover-cat">
         <h2>标签：猫奴</h2>
         <p>猫奴 == <strong>抖M</strong> ？ // true</p>
-        <p>一日养猫，终生为奴。吸猫上瘾，现在最想吸海豹双色布偶妹妹。</p>
+        <p>一日养猫，终生为奴。我想吸猫，我想吸海豹双色布偶妹妹。</p>
         <p>咪咪：喵喵喵？？？</p>
       </div>
     </div>
@@ -102,16 +102,18 @@
             height: 468,
             popoverDir: 'special'
           }
-        }
+        },
+        handlerImageSize: {}
       }
     },
     mounted () {
       this.setImageSize()
-      window.addEventListener('resize', () => {
+      this.handlerImageSize = () => {
         if (window.innerWidth > 1200) {
           this.setImageSize()
         }
-      }, false)
+      }
+      window.addEventListener('resize', this.handlerImageSize, false)
     },
     methods: {
       setImageSize () {
@@ -137,6 +139,9 @@
           this.$refs[`popover-${val}`].style.marginTop = -this.$refs[`popover-${val}`].clientHeight / 2 + 'px'
         })
       }
+    },
+    beforeDestroy () {
+      window.removeEventListener('resize', this.handlerImageSize, false)
     }
   }
 </script>
@@ -205,7 +210,7 @@
       left: 8%
     .boy
       position: absolute
-      top: 36%
+      top: 32%
       left: 0
       z-index: 100
       @include opacity(0)
@@ -235,14 +240,14 @@
       width: 80%
       margin: 0 auto
     .tag-cat
-      top: 74%
+      top: 70%
       left: 52%
       z-index: 100
       @include opacity(0)
       @include animation(catMove 2s 1s ease)
       @include animation-fill-mode(forwards)
     .tag-girl
-      top: 26%
+      top: 22%
       left: 35%
       @include transform(scale(0))
       @include opacity(0)
@@ -269,12 +274,12 @@
         @include opacity(100)
     @include keyframes(girlMove)
       from 
-        top: 26%
+        top: 22%
         left: 35%
         @include transform(scale(0))
         @include opacity(0)
       to 
-        top: 42%
+        top: 38%
         left: 54%
         @include transform(scale(1))
         @include opacity(100)

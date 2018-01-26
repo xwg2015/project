@@ -10,8 +10,8 @@
             <h2 class="title">{{ item.name }}</h2>
             <p class="about" v-html="item.about.replace(/[\r\n]/g, '<br />')"></p>
             <div class="links">
-              <a href="https://github.com/JustLikeU/project" target="_blank">源码地址</a>
-              <a :href="item.link" target="_blank">在线预览</a>
+              <a :href="item.src" target="_blank" v-if="item.src">源码地址</a>
+              <a :href="item.link" target="_blank" v-if="item.link">在线预览</a>
             </div>
           </div>
         </li>

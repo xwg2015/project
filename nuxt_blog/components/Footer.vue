@@ -28,6 +28,7 @@
       @include display-flex()
       @include justify-content()
       @include align-items(center)
+      @include flex(0 0 auto)
       width: $baseHeight * 2
       height: $baseHeight
       @include center-block()

@@ -19,20 +19,25 @@
     },
     data () {
       return {
-        isShow: false
+        isShow: false,
+        handlerStyle: {},
+        handlerShow: {}
       }
     },
     mounted () {
       this.computeStyle()
       this.computeShow(this.distance)
 
-      window.addEventListener('resize', () => {
+      this.handlerStyle = () => {
         this.computeStyle()
-      }, false)
+      }
 
-      window.addEventListener('scroll', () => {
+      this.handlerShow = () => {
         this.computeShow(this.distance)
-      }, false)
+      }
+      window.addEventListener('resize', this.handlerStyle, false)
+
+      window.addEventListener('scroll', this.handlerShow, false)
     },
     methods: {
       computeStyle () {
@@ -52,7 +57,6 @@
         } else {
           this.isShow = false
         }
-
         if (srcollTop + clientHeight + 100 > scrollHeight) {
           this.$refs.backTop.style.bottom = distance + (srcollTop + clientHeight + 100 - scrollHeight) + 'px'
         } else {
@@ -62,6 +66,10 @@
       goTop () {
         window.scrollTo(0, 0)
       }
+    },
+    beforeDestroy () {
+      window.removeEventListener('resize', this.handlerStyle, false)
+      window.removeEventListener('scroll', this.handlerShow, false)
     }
   }
 </script>

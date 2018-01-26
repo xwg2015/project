@@ -18,8 +18,8 @@
       <div class="card-content project-content">
         <h2>项目</h2>
         <ul class="card-list">
-          <li class="card" v-for="(item, index) in projectList" :key="index">
-            <img :src="`//xiongwengang.xyz${item.cover}`" :alt="item.name">
+          <li class="card" v-for="(item, index) in projectList" v-if="index < 3" :key="index">
+            <div class="img-wrap" :style="`background-image: url(//xiongwengang.xyz${item.cover})`"></div>
             <h3>{{ item.name }}</h3>
           </li>
         </ul>
@@ -84,6 +84,13 @@
       .card
         width: 330px
         margin-bottom: 35px
+      .img-wrap
+        width: 330px
+        height: 220px
+        background-size: cover
+        background-position: center
+        border-radius: 4px 4px 0 0
+        overflow: hidden
       .more
         display: block
         width: 330px
@@ -96,13 +103,6 @@
         background-color: $themeColor
         border-radius: 100px
     .article-content
-      .img-wrap
-        width: 330px
-        height: 220px
-        background-size: cover
-        background-position: center
-        border-radius: 4px 4px 0 0
-        overflow: hidden
       h3
         @include display-flex()
         @include align-items()
@@ -115,13 +115,12 @@
     .project-content
       .card
         position: relative
-        height: 240px
         border-radius: 4px
         overflow: hidden
-        img
+        .img-wrap
           transition: 1s
       .card:hover
-        img
+        .img-wrap
           @include transform(scale(1.2))
       h3
         position: absolute

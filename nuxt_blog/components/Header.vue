@@ -6,7 +6,10 @@
       <li><a href="/" ref="index" :class="{'active': !isOther}">主页</a></li>
       <li><a href="/article/technical" ref="article">文章</a></li>
       <li><a href="/project/list" ref="project">项目</a></li>
-      <li><a href="">简历</a></li>
+      <li class="resume">
+        <a href="javascript:;">简历</a>
+        <div class="tip">目前在职</div>
+      </li>
       <li><a href="http://xiongwengang.xyz/admin" target="_blank">传说后台</a></li>
     </ul>
   </section>
@@ -38,6 +41,7 @@
     @include display-flex()
     @include justify-content(center)
     @include align-items()
+    @include flex(0 0 auto)
     position: relative
     z-index: 1
     height: 80px
@@ -56,6 +60,29 @@
         color: $white
       a:hover
         transition: $baseTransition / 2
+    .resume
+      position: relative
+      a:hover + .tip
+        @include opacity(100)
+    .tip
+      position: absolute
+      top: 32px
+      left: 50%
+      width: 100px
+      margin-left: -50px
+      padding: $baseGap / 4
+      text-align: center
+      background-color: rgba($white, 0.8)
+      border-radius: $baseRadius
+      transition: $baseTransition cubic-bezier(.22, .58, .12, .98)
+      @include opacity(0)
+      &:after
+        content: ''
+        position: absolute
+        top: -8px
+        left: 50%
+        margin-left: -8px
+        @include triangle('top', 8px, rgba($white, 0.8))
   .other-header
     background-color: $white
     .nav

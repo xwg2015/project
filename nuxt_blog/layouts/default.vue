@@ -28,8 +28,12 @@
     background-color: $bgColor
     min-width: $minWidth
     color: $themeColor
+  html, body, #__nuxt
+    height: 100%
   img
     max-width: 100%
   .mod-shadow
     box-shadow: 0 1px 3px 0 $boxShadowColor
+  .mod-bd
+    @include flex(1 0 auto)
 </style>
