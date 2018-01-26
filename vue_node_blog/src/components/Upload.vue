@@ -24,8 +24,8 @@
     justify-content center
     align-items center
     flex-direction column
-    width 240px
-    height 180px
+    width 300px
+    height 200px
     border 1px solid #eee
     border-radius 4px
     cursor pointer
@@ -37,8 +37,8 @@
     align-items center
     background-color #fff
     img
-      width 238px
-      height 178px
+      width 298px
+      height 198px
 </style>
 
 <script>

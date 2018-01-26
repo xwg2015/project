@@ -15,6 +15,7 @@ var projectSchema = new Schema({
     about: String,
     cover: String,
     link: String,
+    src: String,
     isShow: {
       type: Boolean,
       default: true

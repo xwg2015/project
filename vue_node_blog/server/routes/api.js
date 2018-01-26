@@ -416,6 +416,7 @@ router.post("/addProject", function(req, res, next) {
       about: req.body.about,
       link: req.body.link,
       cover: req.body.cover,
+      src: req.body.src,
       createTime: req.body.createTime
     });
 
@@ -436,6 +437,7 @@ router.post("/updateProject", function(req, res, next) {
         name: req.body.name,
         about: req.body.about,
         link: req.body.link,
+        src: req.body.src,
         cover: req.body.cover
       }
     };

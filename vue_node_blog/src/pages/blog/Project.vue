@@ -20,8 +20,13 @@
         <FormItem label="项目简介（限150个字之内）" prop="about">
           <Input v-model="projectForm.about" type="textarea" :rows="4" placeholder="请输入项目简介"></Input>
         </FormItem>
-        <FormItem label="项目链接" prop="link">
+        <FormItem label="项目链接（可选）">
           <Input v-model="projectForm.link" placeholder="请输入项目链接">
+            <span slot="prepend">(http|https:)//</span>
+          </Input>
+        </FormItem>
+        <FormItem label="项目源码（可选）">
+          <Input v-model="projectForm.src" placeholder="请输入项目源码">
             <span slot="prepend">(http|https:)//</span>
           </Input>
         </FormItem>
@@ -57,6 +62,7 @@ export default {
         name: '',
         about: '',
         link: '',
+        src: '',
         cover: ''
       },
       typeZh: {
@@ -208,9 +214,8 @@ export default {
         }
       ],
       rules: {
-        name: [{ required: true, min: 1, max: 25, message: '项目名称限1-15个字', trigger: 'blur' }],
+        name: [{ required: true, min: 1, max: 25, message: '项目名称限1-25个字', trigger: 'blur' }],
         about: [{ required: true, min: 1, max: 150, message: '项目简介限1-150个字', trigger: 'blur' }],
-        link: [{ required: true, message: '请输入项目链接', trigger: 'blur' }],
         cover: [{ required: true, message: '请上传封面图', trigger: 'blur' }]
       }
     }
@@ -262,6 +267,7 @@ export default {
         name: '',
         about: '',
         link: '',
+        src: '',
         cover: ''
       }
     },
@@ -274,6 +280,7 @@ export default {
         name: '',
         about: '',
         link: '',
+        src: '',
         cover: ''
       }
     },
@@ -286,6 +293,7 @@ export default {
         name: this.projectData[index].name,
         about: this.projectData[index].about,
         link: this.projectData[index].link,
+        src: this.projectData[index].src,
         cover: this.projectData[index].cover
       }
     },
@@ -341,6 +349,7 @@ export default {
         name: _this.projectForm.name,
         about: _this.projectForm.about,
         link: _this.projectForm.link,
+        src: _this.projectForm.src,
         cover: _this.projectForm.cover,
         createTime: new Date()
       }).then(function (res) {
