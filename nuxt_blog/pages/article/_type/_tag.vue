@@ -3,12 +3,12 @@
     <VHeader :is-other="true"></VHeader>
     <section class="mod-bd">
       <div class="tab">
-        <h2 class="mod-shadow tab-item technical-item" :class="{ 'active': curTab === 'technical' }" @click="tabChange('technical')">技术</h2>
-        <h2 class="mod-shadow tab-item journal-item" :class="{ 'active': curTab === 'journal' }" @click="tabChange('journal')">! 技术</h2>
+        <h2 class="mod-shadow tab-item technical-item" :class="{ 'active': curType === 'technical' }" @click="tabChange('technical')">技术</h2>
+        <h2 class="mod-shadow tab-item journal-item" :class="{ 'active': curType === 'journal' }" @click="tabChange('journal')">! 技术</h2>
       </div>
       <LayoutMain>
         <template slot="left">
-          <div class="tab-content technical-content" v-show="curTab === 'technical'" ref="tabContent">
+          <div class="tab-content technical-content" v-show="curType === 'technical'" ref="tabContent">
             <ul class="article-list">
               <li class="mod-shadow article-item" v-for="item in list" :key="item._id">
                 <h3 class="title"><a :href="`/article/detail/${item._id}`" target="_blank">{{  item.title }}</a></h3>
@@ -20,7 +20,7 @@
               </li>
             </ul>
           </div>
-          <div class="tab-content journal-content" v-show="curTab === 'journal'">
+          <div class="tab-content journal-content" v-show="curType === 'journal'">
             <ul class="article-list">
               <li class="mod-shadow article-item" v-for="item in list" :key="item._id">
                 <h3 class="title"><a :href="`/article/detail/${item._id}`" target="_blank">{{  item.title }}</a></h3>
@@ -84,7 +84,7 @@
       let opts = {
         baseUrl: 'http://xiongwengang.xyz/api/blog/getArticle',
         pageCurrent: 1,
-        pageSize: 3
+        pageSize: 5
       }
       let tag = params.tag ? `&tag=${encodeURI(params.tag)}` : ''
       let query = `?pageCurrent=${opts.pageCurrent}&pageSize=${opts.pageSize}&type=${params.type}${tag}`
@@ -92,11 +92,20 @@
         return {
           list: res.data.data,
           tagList: res.data.tags,
-          curTab: params.type
+          curType: params.type,
+          curTag: params.tag
         }
       }).catch((e) => {
         error({ statusCode: 404, message: '接口请求报错！' })
       })
+    },
+    head () {
+      return {
+        title: `${this.curTag}-熊文刚的博客`,
+        meta: [
+          { hid: 'description', name: 'description', content: `提供关于${this.curTag}的文章` }
+        ]
+      }
     },
     data () {
       return {
@@ -114,7 +123,7 @@
         setTimeout(() => {
           if (srcollTop + clientHeight === scrollHeight && this.hasMore) {
             this.loading = true
-            axios.get(`http://xiongwengang.xyz/api/blog/getArticle?pageCurrent=${page}&pageSize=3&type=${this.curTab}&tag=${this.curTag}`).then((res) => {
+            axios.get(`http://xiongwengang.xyz/api/blog/getArticle?pageCurrent=${page}&pageSize=5&type=${this.curType}&tag=${this.curTag}`).then((res) => {
               if (res.data.data.length > 0) {
                 this.hasMore = true
                 this.curPage = page

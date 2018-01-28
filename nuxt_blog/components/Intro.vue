@@ -14,7 +14,7 @@
       <div class="popover popover-right popover-scorpio" ref="popover-scorpio">
         <h2>标签：天蝎座</h2>
         <p>典型天蝎男，外冷(men)内热(sao)，占有欲强，报复心强。</p>
-        <p>不管你们信不信星座，反正我是信了。见《为什么我会信星座》</p>
+        <p>不管你们信不信，反正我是信了。见《为什么我会信星座》</p>
       </div>
     </div>
     <div class="boy" ref="boy">
@@ -28,14 +28,14 @@
       <div class="tag tag-lol" ref="lol">
         <div class="popover popover-left popover-lol" ref="popover-lol">
           <h2>标签：英雄联盟</h2>
-          <p>看过WE与CLG.EU八小时的拉锯战，也看过皇族连续两年赢了OMG挺进决赛，更加期待S7能跟曾经大学一起开黑的室友一起去北京鸟巢见证RNG夺冠，奈何。力挺全华班RNG，Uzi加油。</p>
+          <p>看过WE与CLG.EU八小时的拉锯战，也看过皇族连续两年赢了OMG挺进决赛，更加期待S7能跟曾经一起开黑的大学室友一起去北京鸟巢见证RNG夺冠，奈何。力挺全华班RNG，Uzi加油。</p>
           <p>对了，<strong>大麦网垃圾</strong>。</p>
         </div>
       </div>
       <div class="tag tag-pokemon" ref="pokemon">
         <div class="popover popover-right popover-pokemon" ref="popover-pokemon">
           <h2>标签：Pokémon</h2>
-          <p>目标是神奇宝贝大师，曾经无数次幻想能有那样的异次元世界，收服神奇宝贝，打道馆，挑战四大天王。期待口袋妖怪正统作登陆NS!</p>
+          <p>目标是神奇宝贝大师，无数次幻想能有那样的异次元世界，收服神奇宝贝，打道馆，挑战四大天王。期待口袋妖怪正统作登陆NS!</p>
         </div>
       </div>
     </div>
@@ -44,7 +44,7 @@
       <div class="popover popover-right popover-boy" ref="popover-cat">
         <h2>标签：猫奴</h2>
         <p>猫奴 == <strong>抖M</strong> ？ // true</p>
-        <p>一日养猫，终生为奴。我想吸猫，我想吸海豹双色布偶妹妹。</p>
+        <p>一日养猫，终生为奴。最渴望拥有一只海豹双色布偶妹妹。</p>
         <p>咪咪：喵喵喵？？？</p>
       </div>
     </div>

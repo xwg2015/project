@@ -72,7 +72,7 @@
       let opts = {
         baseUrl: 'http://xiongwengang.xyz/api/blog/getArticle',
         pageCurrent: 1,
-        pageSize: 3
+        pageSize: 5
       }
       let tag = params.tag ? `&tag=${encodeURI(params.tag)}` : ''
       let query = `?pageCurrent=${opts.pageCurrent}&pageSize=${opts.pageSize}&type=${params.type}${tag}`
@@ -86,6 +86,16 @@
       }).catch((e) => {
         error({ statusCode: 404, message: '接口请求报错！' })
       })
+    },
+    head () {
+      let title = this.curType === 'technical' ? '技术文章' : '日志'
+      let description = this.curType === 'technical' ? '技术文章主要关于前端（javascript、css、html等）、全栈建站（linux、nodejs、mongodb等）的栏目分类' : '日志主要是关于星座、撩妹、旅游、骗局等的栏目分类'
+      return {
+        title: `${title}-熊文刚的博客`,
+        meta: [
+          { hid: 'description', name: 'description', content: description }
+        ]
+      }
     },
     data () {
       return {
@@ -103,7 +113,7 @@
         setTimeout(() => {
           if (srcollTop + clientHeight === scrollHeight && this.hasMore) {
             this.loading = true
-            axios.get(`http://xiongwengang.xyz/api/blog/getArticle?pageCurrent=${page}&pageSize=3&type=${this.curType}`).then((res) => {
+            axios.get(`http://xiongwengang.xyz/api/blog/getArticle?pageCurrent=${page}&pageSize=5&type=${this.curType}`).then((res) => {
               if (res.data.data.length > 0) {
                 this.hasMore = true
                 this.curPage = page

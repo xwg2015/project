@@ -35,16 +35,24 @@
       Loading
     },
     asyncData ({ params, error }) {
-      return axios.get('http://xiongwengang.xyz/api/blog/getProject?pageCurrent=1&pageSize=3').then((res) => {
+      return axios.get('http://xiongwengang.xyz/api/blog/getProject?pageCurrent=1&pageSize=5').then((res) => {
         return { list: res.data.data }
       }).catch((e) => {
         error({ statusCode: 404, message: '接口请求报错！' })
       })
     },
+    head () {
+      return {
+        title: `个人项目-熊文刚的博客`,
+        meta: [
+          { hid: 'description', name: 'description', content: '提供业余时间开发的个人项目供学习参考，有github源码地址或项目在线预览' }
+        ]
+      }
+    },
     data () {
       return {
         curPage: 1,
-        pageSize: 3,
+        pageSize: 5,
         loading: false,
         hasMore: true
       }

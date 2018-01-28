@@ -70,8 +70,12 @@
         recommendList: recommendRes.data.data
       }
     },
-    data () {
+    head () {
       return {
+        title: `${this.detail.title}-熊文刚的博客`,
+        meta: [
+          { hid: 'description', name: 'description', content: this.detail.about }
+        ]
       }
     },
     mounted () {
