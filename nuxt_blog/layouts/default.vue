@@ -5,6 +5,7 @@
 <script>
   export default {
     mounted () {
+      // 百度链接自动推送
       var bp = document.createElement('script')
       var curProtocol = window.location.protocol.split(':')[0]
       if (curProtocol === 'https') {
@@ -12,8 +13,14 @@
       } else {
         bp.src = 'http://push.zhanzhang.baidu.com/push.js'
       }
-      var s = document.getElementsByTagName('script')[0]
-      s.parentNode.insertBefore(bp, s)
+      var s1 = document.getElementsByTagName('script')[0]
+      s1.parentNode.insertBefore(bp, s1)
+
+      // 百度统计
+      var hm = document.createElement('script')
+      hm.src = 'https://hm.baidu.com/hm.js?ec718b9848bb58be0f081296218b1f3c'
+      var s2 = document.getElementsByTagName('script')[0]
+      s2.parentNode.insertBefore(hm, s2)
     }
   }
 </script>
