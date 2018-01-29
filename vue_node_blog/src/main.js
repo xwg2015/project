@@ -25,7 +25,7 @@ Vue.use(mavonEditor)
 Vue.config.productionTip = false
 
 // 开发环境接口跨域
-let dev = process.env.NODE_ENV === 'development' ? '/dev' : '//xiongwengang.xyz'
+let dev = process.env.NODE_ENV === 'development' ? '/dev' : '//admin.xiongwengang.xyz'
 
 // 全局变量设置的一种方式
 Vue.prototype.$golbal = {
