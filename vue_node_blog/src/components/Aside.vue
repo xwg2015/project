@@ -18,6 +18,13 @@
           <MenuItem name="/blog/project">项目管理</MenuItem>
           <MenuItem name="/blog/resume">简历管理</MenuItem>
         </Submenu>
+        <Submenu name="check">
+          <template slot="title">
+            <Icon type="android-train"></Icon>
+            铁路检查后台
+          </template>
+          <MenuItem name="/check/summary">汇总</MenuItem>
+        </Submenu>
         <Submenu name="bxj">
           <template slot="title">
             <Icon type="ios-basketball"></Icon>

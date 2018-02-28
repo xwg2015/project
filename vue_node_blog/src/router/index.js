@@ -4,6 +4,7 @@ import BlogArticle from '@/pages/blog/Article'
 import BlogProject from '@/pages/blog/Project'
 import BlogResume from '@/pages/blog/Resume'
 import SystemUser from '@/pages/system/User'
+import CheckSummary from '@/pages/check/Summary'
 
 Vue.use(Router)
 
@@ -34,6 +35,11 @@ export default new Router({
       path: '/blog/resume',
       name: 'BlogResume',
       component: BlogResume
+    },
+    {
+      path: '/check/summary',
+      name: 'CheckSummary',
+      component: CheckSummary
     }
   ]
 })
