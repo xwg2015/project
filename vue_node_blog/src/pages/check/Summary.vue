@@ -6,8 +6,30 @@
     <header class="mod-header">
       <h2>检查汇总</h2>
     </header>
-    <Table border :columns="summaryColumns" :loading="loading" :data="summaryData"></Table>
-    <Page :total="page.total" :current="page.current" :page-size="page.size" class-name="mod-pagination" show-total @on-change="handleChangePage"></Page>
+    <Table
+      border
+      :columns="summaryColumns"
+      :loading="loading"
+      :data="summaryData">
+    </Table>
+    <Page
+      :total="page.total"
+      :current="page.current"
+      :page-size="page.size"
+      class-name="mod-pagination"
+      show-total
+      @on-change="handleChangePage">
+    </Page>
+    <Modal
+      v-model="dialog"
+      title="消息通知"
+      @on-ok="handleSubmit">
+      <Input
+        v-model="curMessage"
+        type="textarea"
+        :rows="4">
+      </Input>
+    </Modal>
   </section>
 </template>
 
@@ -17,6 +39,9 @@ import { datetime } from '../../lib/format-time'
 export default {
   data () {
     return {
+      dialog: false,
+      curIndex: 0,
+      curMessage: '',
       typeZh: {
         add: '新建',
         edit: '编辑'
@@ -37,6 +62,11 @@ export default {
           render: (h, params) => {
             return h('span', params.index + 1 + (this.page.current - 1) * this.page.size)
           }
+        },
+        {
+          title: '车间',
+          key: 'workshop',
+          align: 'center'
         },
         {
           title: '班组',
@@ -95,7 +125,6 @@ export default {
         {
           title: '操作',
           key: 'action',
-          width: 160,
           align: 'center',
           render: (h, params) => {
             return h('div', [
@@ -121,8 +150,8 @@ export default {
     }
   },
   mounted () {
-    if (localStorage.getItem('summaryData')) {
-      this.allData = JSON.parse(localStorage.getItem('summaryData'))
+    if (sessionStorage.getItem('summaryData')) {
+      this.allData = JSON.parse(sessionStorage.getItem('summaryData'))
       this.page.total = this.allData.length
       this.summaryData = this.allData.slice(0, this.page.size)
     } else {
@@ -160,20 +189,51 @@ export default {
       let _this = this
       _this.loading = true
       axios.get('http://106.14.201.222/admin.php/Warningall/showRecord')
-        .then(function (res) {
+        .then((res) => {
           _this.loading = false
           if (res.data.status) {
-            _this.summaryData = res.data.info
-            _this.page.total = res.data.info.length
-            localStorage.setItem('summaryData', JSON.stringify(res.data.info.slice(0, 20)))
+            sessionStorage.setItem('summaryData', JSON.stringify(res.data.info))
+            _this.allData = res.data.info
+            _this.summaryData = _this.allData.slice(0, _this.page.size)
+            _this.page.total = _this.allData.length
           }
-        }).catch(function () {
+        }).catch(() => {
           _this.$Message.error('接口异常！')
         })
     },
-    //
     handleMessage (index) {
-      // 发送通知
+      let project, text1, text2
+      project = this.summaryData[index].type !== 1 ? this.summaryData[index].station + (this.summaryData[index].code || '') : this.summaryData[index].stations
+      text1 = this.summaryData[index].status === 3 ? '已超' : '距离'
+      text2 = this.summaryData[index].status === 3 ? '' : '还剩'
+      this.curIndex = index
+      this.dialog = true
+      this.curMessage = `${this.summaryData[index].workshop}${this.summaryData[index].teams}${project}上一次检查时间是${this.summaryData[index].actual_time.substr(0, 10)}，${text1}最晚检查时间（${this.summaryData[index].plan_time.substr(0, 10)}） ${text2}${this.summaryData[index].description.match(/[0-9]+/)[0]}天`
+    },
+    handleSubmit () {
+      let jgpsuhAxios = axios.create({
+        baseURL: 'https://api.jpush.cn/v3/',
+        headers: {
+          'Authorization': 'Basic YTczODIwYjk0NDg3NTdiMmVlYjY4MDg4OjhkYzNjNjM0NjhmYjJiN2IxNDc5ODhmZQ=='
+        }
+      })
+      jgpsuhAxios.post('/push', {
+        platform: 'all',
+        audience: {
+          tag: [
+            'tag1'
+          ]
+        },
+        message: {
+          msg_content: this.curMessage,
+          content_type: 'text',
+          title: 'msg'
+        }
+      }).then(() => {
+        this.$Message.success('消息发送成功！')
+      }).catch(() => {
+        this.$Message.error('接口异常！')
+      })
     },
     // 翻页
     handleChangePage (page) {
