@@ -18,7 +18,7 @@
           <MenuItem name="/blog/project">项目管理</MenuItem>
           <MenuItem name="/blog/resume">简历管理</MenuItem>
         </Submenu>
-        <Submenu name="check" v-if="userInfo.name === '熊文刚'">
+        <Submenu name="check">
           <template slot="title">
             <Icon type="android-train"></Icon>
             铁路检查后台
@@ -45,7 +45,6 @@
 </style>
 
 <script>
-  import { mapState } from 'vuex'
   export default {
     name: 'aside',
     data () {
@@ -58,11 +57,6 @@
       let reg = /\/(.*)\//
       this.activeName = this.$route.path
       this.openName = this.$route.path.match(reg)[1]
-    },
-    computed: {
-      ...mapState({
-        userInfo: state => state.userInfo
-      })
     },
     methods: {
       changeMenu: function (name) {

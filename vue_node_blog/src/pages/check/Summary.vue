@@ -184,18 +184,20 @@ export default {
     formattime (time) {
       return datetime(time / 1000)
     },
-    // 获取用户列表
+    // 获取汇总数据
     getData (current) {
       let _this = this
       _this.loading = true
-      axios.get('http://106.14.201.222/admin.php/Warningall/showRecord')
+      axios.get(`${_this.$golbal.host}/getCheck`)
         .then((res) => {
           _this.loading = false
-          if (res.data.status) {
-            sessionStorage.setItem('summaryData', JSON.stringify(res.data.info))
-            _this.allData = res.data.info
+          if (res.data.code === 0) {
+            sessionStorage.setItem('summaryData', JSON.stringify(res.data.data.info))
+            _this.allData = res.data.data.info
             _this.summaryData = _this.allData.slice(0, _this.page.size)
             _this.page.total = _this.allData.length
+          } else {
+            _this.$Message.error(res.data.msg)
           }
         }).catch(() => {
           _this.$Message.error('接口异常！')
