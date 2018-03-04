@@ -35,6 +35,7 @@
 
 <script>
 import axios from 'axios'
+import qs from 'qs'
 import { datetime } from '../../lib/format-time'
 export default {
   data () {
@@ -216,10 +217,11 @@ export default {
       let jgpsuhAxios = axios.create({
         baseURL: 'https://api.jpush.cn/v3/',
         headers: {
-          'Authorization': 'Basic YTczODIwYjk0NDg3NTdiMmVlYjY4MDg4OjhkYzNjNjM0NjhmYjJiN2IxNDc5ODhmZQ=='
+          'Authorization': 'Basic YTczODIwYjk0NDg3NTdiMmVlYjY4MDg4OjhkYzNjNjM0NjhmYjJiN2IxNDc5ODhmZQ==',
+          'Content-Type': 'application/x-www-form-urlencoded'
         }
       })
-      jgpsuhAxios.post('/push', {
+      jgpsuhAxios.post('/push', qs.stringify({
         platform: 'all',
         audience: {
           tag: [
@@ -231,7 +233,7 @@ export default {
           content_type: 'text',
           title: 'msg'
         }
-      }).then(() => {
+      })).then(() => {
         this.$Message.success('消息发送成功！')
       }).catch(() => {
         this.$Message.error('接口异常！')
