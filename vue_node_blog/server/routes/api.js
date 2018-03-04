@@ -1,6 +1,7 @@
 var express = require("express");
 var md5 = require("md5");
 var path = require("path");
+var http = require("http");
 var formidable = require("formidable");
 
 var Article = require("../models/article");
@@ -218,7 +219,7 @@ router.post("/topArticle", function(req, res, next) {
 
 // 前台页面隐藏文章、显示文章
 router.post("/hideArticle", function(req, res, next) {
-  permission(req, res, next, function(userInfo) {
+  permission(req, res, next, function() {
     var query = { _id: req.body.id };
     var update = {
       $set: {
@@ -474,6 +475,33 @@ router.post("/hideProject", function(req, res, next) {
     Project.update(query, update, function(err) {
       if (err) throw err;
       res.json(responseData);
+    });
+  });
+});
+
+// 铁路检查获取汇总列表
+router.get("/getCheck", function(req, res, next) {
+  var realRes = res
+  permission(req, realRes, next, function(userInfo) {
+    if (userInfo && userInfo.role === 2) {
+      responseData.code = 403;
+      responseData.msg = "只有超级管理员才有权查看用户列表！";
+      res.json(responseData);
+      return;
+    }
+    http.get('http://106.14.201.222/admin.php/Warningall/showRecord', (res) => {
+      var json = '';
+      res.on('data', function(chunk) {
+        json += chunk;
+      });
+      res.on('end', function () {
+        json = JSON.parse(json);
+        responseData.data = json;
+        realRes.json(responseData);
+        return;
+      });
+    }).on('error', function() {
+      console.error(e)
     });
   });
 });
