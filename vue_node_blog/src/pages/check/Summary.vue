@@ -216,23 +216,16 @@ export default {
       let jgpsuhAxios = axios.create({
         baseURL: 'https://api.jpush.cn/v3',
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': 'Basic YTczODIwYjk0NDg3NTdiMmVlYjY4MDg4OjhkYzNjNjM0NjhmYjJiN2IxNDc5ODhmZQ=='
         }
       })
-      jgpsuhAxios.post('/push', JSON.stringify({
-        platform: 'all',
-        audience: {
-          tag: [
-            'tag1'
-          ]
-        },
-        message: {
-          msg_content: this.curMessage,
-          content_type: 'text',
-          title: 'msg'
+      jgpsuhAxios.post('/push', {
+        "platform": "all",
+        "audience": "all",
+        "notification" : {
+          "alert" : "Hello, JPush!"
         }
-      })).then(() => {
+      }).then(() => {
         this.$Message.success('消息发送成功！')
       }).catch(() => {
         this.$Message.error('接口异常！')
