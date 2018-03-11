@@ -220,10 +220,10 @@ export default {
         }
       })
       jgpsuhAxios.post('/push', {
-        "platform": "all",
-        "audience": "all",
-        "notification" : {
-          "alert" : "Hello, JPush!"
+        platform: 'all',
+        audience: 'all',
+        notification: {
+          alert: 'Hello, JPush!'
         }
       }).then(() => {
         this.$Message.success('消息发送成功！')
