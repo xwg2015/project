@@ -216,6 +216,7 @@ export default {
       let jgpsuhAxios = axios.create({
         baseURL: 'https://api.jpush.cn/v3',
         headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
           'Authorization': 'Basic YTczODIwYjk0NDg3NTdiMmVlYjY4MDg4OjhkYzNjNjM0NjhmYjJiN2IxNDc5ODhmZQ=='
         }
       })
