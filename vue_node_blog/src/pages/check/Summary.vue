@@ -214,13 +214,11 @@ export default {
     },
     handleSubmit () {
       let jgpsuhAxios = axios.create({
-        baseURL: 'https://api.jpush.cn/v3',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
           'Authorization': 'Basic YTczODIwYjk0NDg3NTdiMmVlYjY4MDg4OjhkYzNjNjM0NjhmYjJiN2IxNDc5ODhmZQ=='
         }
       })
-      jgpsuhAxios.post('/push', {
+      jgpsuhAxios.post('/proxy/v3/push', {
         platform: 'all',
         audience: 'all',
         notification: {
