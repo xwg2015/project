@@ -215,14 +215,15 @@ export default {
         notification: {
           alert: this.curMessage
         }
-      }).then(() => {
+      }).then((res) => {
         this.$Message.success('消息发送成功！')
         let newData = JSON.parse(sessionStorage.getItem('summaryData'))
         newData[this.curIndex].isPushed = true
         sessionStorage.setItem('summaryData', JSON.stringify(newData))
         window.location.reload()
+        console.log(`res:${res}`)
       }).catch((err) => {
-        console.log(err)
+        console.log(`err:${err}`)
         this.$Message.error('请求报错！')
       })
     },

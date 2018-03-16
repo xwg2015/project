@@ -180,10 +180,12 @@ export default {
           notification: {
             alert: this.curMessage
           }
-        }).then(() => {
+        }).then((res) => {
           this.$Message.success('消息发送成功！')
+          console.log(`res:${res}`)
         }).catch((err) => {
-          this.$Message.error(err.message)
+          console.log(`err:${err}`)
+          this.$Message.error('请求报错！')
         })
       }
     },
