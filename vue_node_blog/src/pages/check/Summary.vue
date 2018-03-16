@@ -194,6 +194,9 @@ export default {
     },
     handleSubmit () {
       let jgpsuhAxios = axios.create({
+        validateStatus (status) {
+          return (status >= 200 && status < 300) || status === 400
+        },
         headers: {
           'Authorization': 'Basic YTczODIwYjk0NDg3NTdiMmVlYjY4MDg4OjhkYzNjNjM0NjhmYjJiN2IxNDc5ODhmZQ=='
         }
@@ -216,14 +219,17 @@ export default {
           alert: this.curMessage
         }
       }).then((res) => {
-        this.$Message.success('消息发送成功！')
-        let newData = JSON.parse(sessionStorage.getItem('summaryData'))
-        newData[this.curIndex].isPushed = true
-        sessionStorage.setItem('summaryData', JSON.stringify(newData))
-        window.location.reload()
-        console.log(`res:${res}`)
+        if (res.status === 400) {
+          this.$Message.error(res.data.error.message)
+        } else {
+          this.$Message.success('消息发送成功！')
+          let newData = JSON.parse(sessionStorage.getItem('summaryData'))
+          newData[this.curIndex].isPushed = true
+          sessionStorage.setItem('summaryData', JSON.stringify(newData))
+          window.location.reload()
+        }
       }).catch((err) => {
-        console.log(`err:${err}`)
+        console.log(err)
         this.$Message.error('请求报错！')
       })
     },

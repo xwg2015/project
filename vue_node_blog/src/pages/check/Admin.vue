@@ -184,10 +184,13 @@ export default {
             alert: this.curMessage
           }
         }).then((res) => {
-          this.$Message.success('消息发送成功！')
-          console.log(`res:${res}`)
+          if (res.status === 400) {
+            this.$Message.error(res.data.error.message)
+          } else {
+            this.$Message.success('消息发送成功！')
+          }
         }).catch((err) => {
-          console.log(`err:${err}`)
+          console.log(err)
           this.$Message.error('请求报错！')
         })
       }
