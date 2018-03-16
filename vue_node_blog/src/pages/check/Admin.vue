@@ -166,6 +166,9 @@ export default {
     handleSubmit () {
       if (this.curMessage) {
         let jgpsuhAxios = axios.create({
+          validateStatus (status) {
+            return (status >= 200 && status < 300) || status === 400
+          },
           headers: {
             'Authorization': 'Basic YTczODIwYjk0NDg3NTdiMmVlYjY4MDg4OjhkYzNjNjM0NjhmYjJiN2IxNDc5ODhmZQ=='
           }

@@ -223,7 +223,7 @@ export default {
         window.location.reload()
         console.log(`res:${res}`)
       }).catch((err) => {
-        console.log(`err:${err}`)
+        console.log(err:${err}`)
         this.$Message.error('请求报错！')
       })
     },
