@@ -1,5 +1,5 @@
 <template>
-  <section class="page page-system-user">
+  <section class="page page-check-summary">
     <Alert class="mod-alert" show-icon closable>
       温馨提示：目前只有超级管理员才有权限访问。
     </Alert>
@@ -35,17 +35,12 @@
 
 <script>
 import axios from 'axios'
-import { datetime } from '../../lib/format-time'
 export default {
   data () {
     return {
       dialog: false,
       curIndex: 0,
       curMessage: '',
-      typeZh: {
-        add: '新建',
-        edit: '编辑'
-      },
       page: {
         current: 1,
         size: 10,
@@ -141,7 +136,7 @@ export default {
                     }
                   }
                 },
-                '发送通知'
+                this.pushText(params.index)
               )
             ])
           }
@@ -153,36 +148,17 @@ export default {
     if (sessionStorage.getItem('summaryData')) {
       this.allData = JSON.parse(sessionStorage.getItem('summaryData'))
       this.page.total = this.allData.length
-      this.summaryData = this.allData.slice(0, this.page.size)
+      let page = this.$route.query.page ? this.$route.query.page : 1
+      this.page.current = Number(page)
+      this.summaryData = this.allData.slice((page - 1) * this.page.size, page * this.page.size)
     } else {
       this.getData()
     }
   },
   methods: {
-    // 设置、取消管理员
-    adminText (index) {
-      if (this.userData[index].role === 1) {
-        return '设置管理员'
-      } else if (this.userData[index].role === 2) {
-        return '取消管理员'
-      } else {
-        return '超级管理员'
-      }
-    },
-    adminDisabled (index) {
-      if (this.userData[index].role === 3) {
-        return true
-      } else {
-        return false
-      }
-    },
     // 隐藏按钮文案
-    hideText (index) {
-      return this.userData[index].isShow ? '隐藏' : '取消隐藏'
-    },
-    // 时间格式化
-    formattime (time) {
-      return datetime(time / 1000)
+    pushText (index) {
+      return this.summaryData[index].isPushed ? '今日已发送' : '发送通知'
     },
     // 获取汇总数据
     getData (current) {
@@ -192,6 +168,9 @@ export default {
         .then((res) => {
           _this.loading = false
           if (res.data.code === 0) {
+            res.data.data.info.forEach((val, idx, arr) => {
+              val.isPushed = false
+            })
             sessionStorage.setItem('summaryData', JSON.stringify(res.data.data.info))
             _this.allData = res.data.data.info
             _this.summaryData = _this.allData.slice(0, _this.page.size)
@@ -199,8 +178,9 @@ export default {
           } else {
             _this.$Message.error(res.data.msg)
           }
-        }).catch(() => {
-          _this.$Message.error('接口异常！')
+        }).catch((err) => {
+          console.log(err)
+          _this.$Message.error('请求报错！')
         })
     },
     handleMessage (index) {
@@ -218,20 +198,42 @@ export default {
           'Authorization': 'Basic YTczODIwYjk0NDg3NTdiMmVlYjY4MDg4OjhkYzNjNjM0NjhmYjJiN2IxNDc5ODhmZQ=='
         }
       })
+      // 推送分非延期和延期
+      // 延期必须通知段务
+      let audience = {
+        tag: [
+          this.summaryData[this.curIndex].teams,
+          this.summaryData[this.curIndex].workshop
+        ]
+      }
+      if (this.summaryData[this.curIndex].status === 3) {
+        audience.tag.push('南昌西工段')
+      }
       jgpsuhAxios.post('/proxy/v3/push', {
         platform: 'all',
-        audience: 'all',
+        audience: audience,
         notification: {
-          alert: 'Hello, JPush!'
+          alert: this.curMessage
         }
       }).then(() => {
         this.$Message.success('消息发送成功！')
-      }).catch(() => {
-        this.$Message.error('接口异常！')
+        let newData = JSON.parse(sessionStorage.getItem('summaryData'))
+        newData[this.curIndex].isPushed = true
+        sessionStorage.setItem('summaryData', JSON.stringify(newData))
+        window.location.reload()
+      }).catch((err) => {
+        console.log(err)
+        this.$Message.error('请求报错！')
       })
     },
     // 翻页
     handleChangePage (page) {
+      this.$router.push({
+        name: 'CheckSummary',
+        query: {
+          page: page
+        }
+      })
       this.page.current = page
       this.summaryData = this.allData.slice((page - 1) * this.page.size, page * this.page.size)
     }

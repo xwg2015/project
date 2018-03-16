@@ -23,7 +23,8 @@
             <Icon type="android-train"></Icon>
             铁路检查后台
           </template>
-          <MenuItem name="/check/summary">汇总</MenuItem>
+          <MenuItem name="/check/summary">检查汇总</MenuItem>
+          <MenuItem name="/check/admin">管理员列表</MenuItem>
         </Submenu>
         <Submenu name="bxj">
           <template slot="title">

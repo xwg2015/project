@@ -479,6 +479,11 @@ router.post("/hideProject", function(req, res, next) {
   });
 });
 
+/**
+ * 铁路检查后台接口
+ *
+ */
+
 // 铁路检查获取汇总列表
 router.get("/getCheck", function(req, res, next) {
   var realRes = res
@@ -490,6 +495,33 @@ router.get("/getCheck", function(req, res, next) {
       return;
     }
     http.get('http://106.14.201.222/admin.php/Warningall/showRecord', (res) => {
+      var json = '';
+      res.on('data', function(chunk) {
+        json += chunk;
+      });
+      res.on('end', function () {
+        json = JSON.parse(json);
+        responseData.data = json;
+        realRes.json(responseData);
+        return;
+      });
+    }).on('error', function() {
+      console.error(e)
+    });
+  });
+});
+
+// 铁路检查获取汇总列表
+router.get("/getAdmin", function(req, res, next) {
+  var realRes = res
+  permission(req, realRes, next, function(userInfo) {
+    if (userInfo && userInfo.role === 2) {
+      responseData.code = 403;
+      responseData.msg = "只有超级管理员才有权查看用户列表！";
+      res.json(responseData);
+      return;
+    }
+    http.get('http://106.14.201.222/admin.php/Warningall/getAdminInfo', (res) => {
       var json = '';
       res.on('data', function(chunk) {
         json += chunk;
