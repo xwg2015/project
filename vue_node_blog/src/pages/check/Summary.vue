@@ -205,13 +205,19 @@ export default {
       // 延期必须通知段务
       let audience = {
         tag: [
-          this.summaryData[this.curIndex].teams,
-          this.summaryData[this.curIndex].workshop
+          this.summaryData[this.curIndex].teams
         ]
       }
       if (this.summaryData[this.curIndex].status === 3) {
-        audience.tag.push('南昌西工务段段机关')
+        // 延期检查通知车间长 段机关
+        audience.tag.push(this.summaryData[this.curIndex].workshop, '南昌西工务段段机关')
+      } else if (this.summaryData[this.curIndex].status === 2) {
+        // 检查还剩一天通知车间长
+        if (this.summaryData[this.curIndex].description.match(/\w/)[0] === 1) {
+          audience.tag.push(this.summaryData[this.curIndex].workshop)
+        }
       }
+      console.log(audience)
       jgpsuhAxios.post('/proxy/v3/push', {
         platform: 'all',
         audience: audience,
