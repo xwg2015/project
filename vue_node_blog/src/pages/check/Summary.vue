@@ -210,7 +210,7 @@ export default {
         ]
       }
       if (this.summaryData[this.curIndex].status === 3) {
-        audience.tag.push('南昌西工段')
+        audience.tag.push('南昌西工务段段机关')
       }
       jgpsuhAxios.post('/proxy/v3/push', {
         platform: 'all',
